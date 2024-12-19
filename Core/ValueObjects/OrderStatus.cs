@@ -42,7 +42,6 @@ namespace Core.ValueObjects
     {
         Cart,
         New,
-        Cancelled,
         Shipping,
         Shipped
     }
