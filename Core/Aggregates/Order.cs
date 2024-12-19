@@ -1,5 +1,5 @@
-﻿using Core.ValueObjects;
-using Core.OrderUtils;
+﻿using Core.Entities;
+using Core.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,21 +8,17 @@ using System.Threading.Tasks;
 
 namespace Core.Aggregates
 {
-    public class Order: IOrderState
+    public class Order
     {
         public Guid Id { get; }
         public Guid CustomerId { get; }
-        public int OrderNumber { get; }
         public OrderStatus Status { get; private set; }
 
-        private Dictionary<Guid, OrderItem> _itemsByProductIds = new Dictionary<Guid, OrderItem>();
-
-        public Order(OrderItem item, Guid customerId, Guid id = default)
+        public Order(Guid customerId, Guid id = default, OrderStatus status = default)
         {
             this.Id = id != default ? id : Guid.NewGuid();
             this.CustomerId = customerId;
-            this.Status = new CartOrderStatus();
-            _itemsByProductIds.Add(item.ItemId, item);
+            this.Status = status != default ? status.Clone() : new CartOrderStatus();
         }
 
         public void ChangeStatusOrFail(OrderStatus newStatus)
@@ -32,29 +28,6 @@ namespace Core.Aggregates
                 throw new ArgumentException("Invalid order status change.");
             }
             this.Status = newStatus.Clone();
-        }
-
-        public void AddOrUpdateItem(OrderItem item)
-        {
-            OrderStateFactory.GetStateForOrder(this).AddOrUpdateItem(item);
-        }
-
-        public void RemoveItem(OrderItem item)
-        {
-            OrderStateFactory.GetStateForOrder(this).RemoveItem(item);
-        }
-
-        internal void AddOrUpdateItemInternal(OrderItem item)
-        {
-            if (!_itemsByProductIds.TryAdd(item.ItemId, item.Clone()))
-            {
-                _itemsByProductIds[item.ItemId] = item.Clone();
-            }
-        }
-
-        internal void RemoveItemInternal(OrderItem item)
-        {
-            _itemsByProductIds.Remove(item.ItemId);
         }
     }
 }

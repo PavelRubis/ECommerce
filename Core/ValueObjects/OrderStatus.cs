@@ -71,43 +71,26 @@ namespace Core.ValueObjects
     public class NewOrderStatus : OrderStatus
     {
         public DateTime OrderDate { get; }
+        public long OrderNumber { get; }
 
         static NewOrderStatus()
         {
             _canBeChangedTo = new HashSet<OrderStatusEnum>()
             {
-                OrderStatusEnum.Cancelled,
                 OrderStatusEnum.Shipping,
             };
         }
 
-        public NewOrderStatus(DateTime orderDate)
+        public NewOrderStatus(DateTime orderDate, long orderNumber)
             : base(OrderStatusEnum.New)
         {
             this.OrderDate = orderDate;
+            this.OrderNumber = orderNumber;
         }
 
         public override OrderStatus Clone()
         {
-            return new NewOrderStatus(this.OrderDate);
-        }
-    }
-
-    public class CancelledOrderStatus : OrderStatus
-    {
-        static CancelledOrderStatus()
-        {
-            _canBeChangedTo = new HashSet<OrderStatusEnum>();
-        }
-
-        public CancelledOrderStatus()
-            : base(OrderStatusEnum.Cancelled)
-        {
-        }
-
-        public override OrderStatus Clone()
-        {
-            return new CancelledOrderStatus();
+            return new NewOrderStatus(this.OrderDate, this.OrderNumber);
         }
     }
 
