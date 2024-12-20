@@ -67,7 +67,7 @@ namespace ECommerce.DAL.Repositories
             var orderEntity = await orderQuery.FirstOrDefaultAsync(o => o.Id == id);
             if (orderEntity == null)
             {
-                throw new NullReferenceException("order");
+                throw new NullReferenceException("Order not found");
             }
             return orderEntity;
         }
@@ -85,7 +85,7 @@ namespace ECommerce.DAL.Repositories
             var orderEntity = await _dbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
             if (orderEntity == null)
             {
-                throw new NullReferenceException("order");
+                throw new NullReferenceException("Order not found");
             }
             var order = orderEntity.GetOriginalObject();
             order.ChangeStatusOrFail(newStatus);
@@ -95,10 +95,11 @@ namespace ECommerce.DAL.Repositories
         public async Task DeleteAsync(Guid id)
         {
             var orderEntity = await _dbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
-            if (orderEntity != null)
+            if (orderEntity == null)
             {
-                _dbContext.Orders.Remove(orderEntity);
+                throw new NullReferenceException("Order not found");
             }
+            _dbContext.Orders.Remove(orderEntity);
         }
     }
 }
