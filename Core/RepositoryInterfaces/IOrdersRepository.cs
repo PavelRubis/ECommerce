@@ -12,13 +12,11 @@ namespace Core.RepositoryInterfaces
 {
     public interface IOrdersRepository
     {
-        Order GetById(Guid id);
-        IEnumerable<Order> GetAll();
-        IEnumerable<Order> GetBySpecification(ISpecification<IProjection<Order>> spec);
-        Guid Create(Order order);
-        void ChangeStatus(Guid id, OrderStatus newStatus);
-        void SetOrUpdateItem(OrderItem item);
-        void RemoveItem(OrderItem item);
-        void Delete(Guid id);
+        Task<IDTO<Order>> GetDtoByIdAsync(Guid id, bool withItems = false);
+        Task<List<IDTO<Order>>> GetDtosAsync(int page, int pageSize, bool withItems = false);
+        Task<List<IDTO<Order>>> GetDtosBySpecificationAsync(ISpecification<IDTO<Order>> spec, int page, int pageSize, bool withItems = false);
+        Task<Guid> CreateAsync(Order order);
+        Task ChangeStatusAsync(Guid id, OrderStatus newStatus);
+        Task DeleteAsync(Guid id);
     }
 }

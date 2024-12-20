@@ -1,4 +1,6 @@
 ﻿using Core.Aggregates;
+using Core.Entities;
+using Core.ValueObjects;
 using Core.Utils;
 using System;
 using System.Collections.Generic;
@@ -10,15 +12,10 @@ namespace Core.ServiceInterfaces
 {
     public interface IOrdersService
     {
-        ISpecification<IProjection<Order>> AreItemsModifiableSpec { get; }
-        ISpecification<IProjection<Order>> CanBeDeletedSpec { get; }
-        ISpecification<IProjection<Order>> HasSuchStatusSpec { get; }
-        Order Get(Guid id);
-        IEnumerable<Order> GetAll();
-        Guid CreateCart(Order order);
-        void SubmitNew(Guid id);
-        void Delete(Guid id);
-        void SubmitShipping(Guid id, DateTime shipmentDate);
-        void Complete(Guid id);
+        ISpecification<IDTO<Order>> CanBeDeletedSpec { get; }
+        ISpecification<IDTO<Order>> HasSuchStatusSpec { get; }
+        Task<IEnumerable<IDTO<Order>>> GetbyStatusAsync(string statusStr);
+        Task SubmitShippingAsync(Guid id, long orderNumber, DateTime shipmentDate);
+        Task CompleteAsync(Guid id);
     }
 }

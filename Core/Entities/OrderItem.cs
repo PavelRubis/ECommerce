@@ -15,13 +15,13 @@ namespace Core.Entities
         public int ItemsCount { get; }
         public decimal ItemPrice { get; }
 
-        private OrderItem(Guid id, Guid orderId, Guid itemId, int itemsCount, decimal itemsPrice)
+        private OrderItem(Guid id, Guid orderId, Guid itemId, int itemsCount, decimal itemPrice)
         {
             Id = id != default ? id : Guid.NewGuid();
             OrderId = orderId;
             ItemId = itemId;
             ItemsCount = itemsCount;
-            ItemPrice = itemsPrice;
+            ItemPrice = itemPrice;
         }
 
         public static OrderItem CreateOrFail(Guid orderId, Guid itemId, int itemsCount, decimal itemsPrice, Guid id = default)

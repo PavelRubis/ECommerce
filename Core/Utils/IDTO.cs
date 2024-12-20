@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Core.Utils
 {
-    public interface IProjection<T>
+    public interface IDTO<T>
     {
-        IProjection<T> From(T obj);
-        T To(IProjection<T> projection);
+        T GetOriginalObject();
+        void SetDataFromObject(T obj);
     }
 }

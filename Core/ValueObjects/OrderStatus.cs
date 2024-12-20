@@ -40,31 +40,9 @@ namespace Core.ValueObjects
 
     public enum OrderStatusEnum
     {
-        Cart,
         New,
         Shipping,
         Shipped
-    }
-
-    public class CartOrderStatus : OrderStatus
-    {
-        static CartOrderStatus()
-        {
-            _canBeChangedTo = new HashSet<OrderStatusEnum>()
-            {
-                OrderStatusEnum.New,
-            };
-        }
-
-        public CartOrderStatus()
-            : base(OrderStatusEnum.Cart)
-        {
-        }
-
-        public override OrderStatus Clone()
-        {
-            return new CartOrderStatus();
-        }
     }
 
     public class NewOrderStatus : OrderStatus

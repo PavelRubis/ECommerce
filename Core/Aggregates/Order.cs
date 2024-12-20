@@ -13,12 +13,14 @@ namespace Core.Aggregates
         public Guid Id { get; }
         public Guid CustomerId { get; }
         public OrderStatus Status { get; private set; }
+        public List<OrderItem> Items { get; private set; }
 
-        public Order(Guid customerId, Guid id = default, OrderStatus status = default)
+        public Order(Guid customerId, OrderStatus status, List<OrderItem> items, Guid id = default)
         {
             this.Id = id != default ? id : Guid.NewGuid();
             this.CustomerId = customerId;
-            this.Status = status != default ? status.Clone() : new CartOrderStatus();
+            this.Status = status.Clone();
+            this.Items = new List<OrderItem>(items);
         }
 
         public void ChangeStatusOrFail(OrderStatus newStatus)
