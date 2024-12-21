@@ -1,7 +1,7 @@
-﻿using Core.Aggregates;
-using Core.Entities;
-using Core.Utils;
-using Core.ValueObjects;
+﻿using ECommerce.Core.Aggregates;
+using ECommerce.Core.Entities;
+using ECommerce.Core.Utils;
+using ECommerce.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.DAL.Models
 {
-    public class OrderEntity : IDTO<Order>
+    public class OrderEntity : IDTO<Order>, IOrderSpecDTO
     {
         public Guid Id { get; set; }
         public Guid CustomerId { get; set; }

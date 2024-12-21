@@ -1,4 +1,4 @@
-﻿using Core.Aggregates;
+﻿using ECommerce.Core.Aggregates;
 using ECommerce.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using System;

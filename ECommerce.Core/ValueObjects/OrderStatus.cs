@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.ValueObjects
+namespace ECommerce.Core.ValueObjects
 {
     public abstract class OrderStatus
     {

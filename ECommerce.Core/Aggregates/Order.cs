@@ -1,12 +1,14 @@
-﻿using Core.Entities;
-using Core.ValueObjects;
+﻿using ECommerce.Core.Entities;
+using ECommerce.Core.Utils;
+using ECommerce.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Aggregates
+namespace ECommerce.Core.Aggregates
 {
     public class Order
     {
@@ -31,5 +33,9 @@ namespace Core.Aggregates
             }
             this.Status = newStatus.Clone();
         }
+    }
+    public interface IOrderSpecification
+    {
+        Expression<Func<IOrderSpecDTO, bool>> ToExpression();
     }
 }

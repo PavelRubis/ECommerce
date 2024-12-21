@@ -1,8 +1,8 @@
-﻿using Core.Aggregates;
+﻿using ECommerce.Core.Aggregates;
 using ECommerce.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using ECommerce.Core.RepositoryInterfaces;
-using Core.Utils;
+using ECommerce.Core.Utils;
 
 namespace ECommerce.DAL.Repositories
 {

@@ -1,8 +1,8 @@
-﻿using Core.Aggregates;
-using Core.Entities;
-using Core.RepositoryInterfaces;
-using Core.Utils;
-using Core.ValueObjects;
+﻿using ECommerce.Core.Aggregates;
+using ECommerce.Core.Entities;
+using ECommerce.Core.RepositoryInterfaces;
+using ECommerce.Core.Utils;
+using ECommerce.Core.ValueObjects;
 using ECommerce.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.DAL.Repositories
 {
-    public class OrdersRepository: IOrdersRepository
+    public class OrdersRepository : IOrdersRepository
     {
         private readonly ECommerceDbContext _dbContext;
 
@@ -39,21 +39,17 @@ namespace ECommerce.DAL.Repositories
             return new List<IDTO<Order>>(orderEntities);
         }
 
-        public async Task<List<IDTO<Order>>> GetDtosBySpecificationAsync(ISpecification<IDTO<Order>> spec, int page, int pageSize, bool withItems = false)
+        public async Task<List<IDTO<Order>>> GetDtosBySpecificationAsync(IOrderSpecification spec, int page, int pageSize, bool withItems = false)
         {
-            var ordersQuery = _dbContext.Orders
-                .AsNoTracking()
-                .Where(spec.ToExpression())
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize);
-
+            var ordersQuery = _dbContext.Orders.AsNoTracking();
             if (withItems)
             {
-                ordersQuery = ordersQuery.Include(o => (o as OrderEntity).OrderItems);
+                ordersQuery = ordersQuery.Include(o => o.OrderItems);
             }
+            ordersQuery.Where(spec.ToExpression()).Skip((page - 1) * pageSize).Take(pageSize);
 
             var orderEntities = await ordersQuery.ToListAsync();
-            return orderEntities;
+            return new List<IDTO<Order>>(orderEntities);
         }
 
         public async Task<IDTO<Order>> GetDtoByIdAsync(Guid id, bool withItems = false)
@@ -80,16 +76,12 @@ namespace ECommerce.DAL.Repositories
             return orderEntry.Entity.Id;
         }
 
-        public async Task ChangeStatusAsync(Guid id, OrderStatus newStatus)
+        public Guid EditAsync(Order order)
         {
-            var orderEntity = await _dbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
-            if (orderEntity == null)
-            {
-                throw new NullReferenceException("Order not found");
-            }
-            var order = orderEntity.GetOriginalObject();
-            order.ChangeStatusOrFail(newStatus);
+            var orderEntity = new OrderEntity();
             orderEntity.SetDataFromObject(order);
+            var orderEntry = _dbContext.Update(orderEntity);
+            return orderEntry.Entity.Id;
         }
 
         public async Task DeleteAsync(Guid id)

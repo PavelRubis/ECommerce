@@ -1,6 +1,6 @@
-﻿using Core.Aggregates;
-using Core.Entities;
-using Core.Utils;
+﻿using ECommerce.Core.Aggregates;
+using ECommerce.Core.Entities;
+using ECommerce.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;

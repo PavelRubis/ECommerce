@@ -1,4 +1,4 @@
-﻿using Core.ValueObjects;
+﻿using ECommerce.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Core.Aggregates
+namespace ECommerce.Core.Aggregates
 {
     public class Item
     {

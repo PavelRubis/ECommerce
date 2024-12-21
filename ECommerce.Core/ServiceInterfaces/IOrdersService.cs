@@ -1,21 +1,21 @@
-﻿using Core.Aggregates;
-using Core.Entities;
-using Core.ValueObjects;
-using Core.Utils;
+﻿using ECommerce.Core.Aggregates;
+using ECommerce.Core.Entities;
+using ECommerce.Core.ValueObjects;
+using ECommerce.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.ServiceInterfaces
+namespace ECommerce.Core.ServiceInterfaces
 {
     public interface IOrdersService
     {
-        ISpecification<IDTO<Order>> CanBeDeletedSpec { get; }
-        ISpecification<IDTO<Order>> HasSuchStatusSpec { get; }
-        Task<IEnumerable<IDTO<Order>>> GetbyStatusAsync(string statusStr);
-        Task SubmitShippingAsync(Guid id, long orderNumber, DateTime shipmentDate);
+        IOrderSpecification ByStatusSpec(string statusStr);
+        Task<IEnumerable<IDTO<Order>>> GetbyStatusAsync(string statusStr, int page, int pageSize, bool withItems = false);
+        Task SubmitShippingAsync(Guid id, DateTime shipmentDate);
         Task CompleteAsync(Guid id);
+        Task DeleteAsync(Guid id);
     }
 }

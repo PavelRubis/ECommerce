@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Utils
+namespace ECommerce.Core.Utils
 {
     public interface IDTO<T>
     {

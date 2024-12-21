@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Core.Aggregates
+namespace ECommerce.Core.Aggregates
 {
     public class Customer
     {
