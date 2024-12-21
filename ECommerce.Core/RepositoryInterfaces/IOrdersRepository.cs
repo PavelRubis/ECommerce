@@ -16,7 +16,7 @@ namespace ECommerce.Core.RepositoryInterfaces
         Task<List<IDTO<Order>>> GetDtosAsync(int page, int pageSize, bool withItems = false);
         Task<List<IDTO<Order>>> GetDtosBySpecificationAsync(IOrderSpecification spec, int page, int pageSize, bool withItems = false);
         Task<Guid> CreateAsync(Order order);
-        Guid EditAsync(Order order);
+        Guid Edit(Order order);
         Task DeleteAsync(Guid id);
     }
 }

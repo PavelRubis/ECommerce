@@ -76,7 +76,7 @@ namespace ECommerce.DAL.Repositories
             return orderEntry.Entity.Id;
         }
 
-        public Guid EditAsync(Order order)
+        public Guid Edit(Order order)
         {
             var orderEntity = new OrderEntity();
             orderEntity.SetDataFromObject(order);

@@ -27,7 +27,7 @@ namespace Application.Implementations.Services
             return new HasSuchStatusSpec(statusStr);
         }
 
-        public async Task<IEnumerable<IDTO<Order>>> GetbyStatusAsync(string statusStr, int page, int pageSize, bool withItems = false)
+        public async Task<List<IDTO<Order>>> GetbyStatusAsync(string statusStr, int page, int pageSize, bool withItems = false)
         {
             var spec = this.ByStatusSpec(statusStr);
             var dtos = await _repo.GetDtosBySpecificationAsync(spec, page, pageSize, withItems);
@@ -39,7 +39,7 @@ namespace Application.Implementations.Services
             var orderDTO = await _repo.GetDtoByIdAsync(id);
             var order = orderDTO.GetOriginalObject();
             order.ChangeStatusOrFail(new ShippingOrderStatus(shipmentDate));
-            _repo.EditAsync(order);
+            _repo.Edit(order);
         }
 
         public async Task CompleteAsync(Guid id)
@@ -47,7 +47,7 @@ namespace Application.Implementations.Services
             var orderDTO = await _repo.GetDtoByIdAsync(id);
             var order = orderDTO.GetOriginalObject();
             order.ChangeStatusOrFail(new ShippedOrderStatus());
-            _repo.EditAsync(order);
+            _repo.Edit(order);
         }
 
         public async Task DeleteAsync(Guid id)

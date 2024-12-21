@@ -30,22 +30,22 @@ namespace ECommerce.DAL.Repositories
 
         public async Task<List<IDTO<Customer>>> GetAllDtosAsync()
         {
-            return await _dbContext.Customers
+            var customers = await _dbContext.Customers
                 .AsNoTracking()
                 .Include(e => e.Account)
-                .Select(e => e as IDTO<Customer>)
                 .ToListAsync();
+            return new List<IDTO<Customer>>(customers);
         }
 
         public async Task<List<IDTO<Customer>>> GetDtosByPageAsync(int page, int pageSize)
         {
-            return await _dbContext.Customers
+            var customers = await _dbContext.Customers
                 .AsNoTracking()
+                .Include(e => e.Account)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .Include(e => e.Account)
-                .Select(e => e as IDTO<Customer>)
                 .ToListAsync();
+            return new List<IDTO<Customer>>(customers);
         }
 
         public async Task<Guid> CreateAsync(Customer customer)
@@ -71,7 +71,7 @@ namespace ECommerce.DAL.Repositories
         public async Task DeleteAsync(Guid id)
         {
             var entity = await _dbContext.Customers.FirstOrDefaultAsync(i => i.Id == id);
-            if (entity != null)
+            if (entity == null)
             {
                 throw new NullReferenceException("Customer not found");
             }

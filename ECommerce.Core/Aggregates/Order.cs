@@ -34,6 +34,7 @@ namespace ECommerce.Core.Aggregates
             this.Status = newStatus.Clone();
         }
     }
+
     public interface IOrderSpecification
     {
         Expression<Func<IOrderSpecDTO, bool>> ToExpression();

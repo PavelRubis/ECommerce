@@ -27,18 +27,20 @@ namespace ECommerce.DAL.Repositories
 
         public async Task<List<IDTO<Item>>> GetAllDtosAsync()
         {
-            return await _dbContext.Items.AsNoTracking()
-                                         .Select(e => e as IDTO<Item>)
-                                         .ToListAsync();
+            var items = await _dbContext.Items
+                .AsNoTracking()
+                .ToListAsync();
+            return new List<IDTO<Item>>(items);
         }
 
         public async Task<List<IDTO<Item>>> GetDtosByPageAsync(int page, int pageSize)
         {
-            return await _dbContext.Items.AsNoTracking()
-                                         .Skip((page - 1) * pageSize)
-                                         .Take(pageSize)
-                                         .Select(e => e as IDTO<Item>)
-                                         .ToListAsync();
+            var items = await _dbContext.Items
+                .AsNoTracking()
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return new List<IDTO<Item>>(items);
         }
 
         public async Task<Guid> CreateAsync(Item item)

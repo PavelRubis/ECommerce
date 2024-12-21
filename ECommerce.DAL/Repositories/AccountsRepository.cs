@@ -34,15 +34,5 @@ namespace ECommerce.DAL.Repositories
             _dbContext.Accounts.Update(entity);
             return entity.Id;
         }
-
-        public async Task DeleteAsync(Guid id)
-        {
-            var entity = await _dbContext.Accounts.FirstOrDefaultAsync(i => i.Id == id);
-            if (entity != null)
-            {
-                throw new NullReferenceException("Customer not found");
-            }
-            _dbContext.Accounts.Remove(entity);
-        }
     }
 }
