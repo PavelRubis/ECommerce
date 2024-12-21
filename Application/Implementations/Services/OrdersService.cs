@@ -39,6 +39,7 @@ namespace Application.Implementations.Services
             var orderDTO = await _repo.GetDtoByIdAsync(id);
             var order = orderDTO.GetOriginalObject();
             order.ChangeStatusOrFail(new ShippingOrderStatus(shipmentDate));
+            _repo.EditAsync(order);
         }
 
         public async Task CompleteAsync(Guid id)
@@ -46,6 +47,7 @@ namespace Application.Implementations.Services
             var orderDTO = await _repo.GetDtoByIdAsync(id);
             var order = orderDTO.GetOriginalObject();
             order.ChangeStatusOrFail(new ShippedOrderStatus());
+            _repo.EditAsync(order);
         }
 
         public async Task DeleteAsync(Guid id)
