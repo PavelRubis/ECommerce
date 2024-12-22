@@ -29,6 +29,9 @@ namespace ECommerce.DAL.DTOs
 
             CreateMap<OrderWebDTO, OrderEntity>();
             CreateMap<OrderEntity, OrderWebDTO>();
+
+            CreateMap<OrderItemWebDTO, OrderItemEntity>();
+            CreateMap<OrderItemEntity, OrderItemWebDTO>();
         }
     }
 

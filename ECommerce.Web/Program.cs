@@ -1,9 +1,11 @@
 using ECommerce.Core.Aggregates;
 using ECommerce.Core.RepositoryInterfaces;
+using ECommerce.Core.ServiceInterfaces;
 using ECommerce.DAL;
 using ECommerce.DAL.DTOs;
 using ECommerce.DAL.Repositories;
 using ECommerce.DAL.UnitOfWork;
+using ECommerce.Application.Implementations.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Web
@@ -27,6 +29,7 @@ namespace Web
                 }
             );
             builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
+            builder.Services.AddScoped<IOrdersService, OrdersService>();
             builder.Services.AddScoped<ICRUDRepository<Item>, ItemsRepository>();
             builder.Services.AddScoped<ICRUDRepository<Customer>, CustomersRepository>();
             builder.Services.AddScoped<AccountsRepository, AccountsRepository>();

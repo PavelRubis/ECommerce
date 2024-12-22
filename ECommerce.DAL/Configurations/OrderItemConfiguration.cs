@@ -25,7 +25,7 @@ namespace ECommerce.DAL.Configurations
             builder
                 .HasOne(x => x.Item)
                 .WithMany(i => i.OrderItems)
-                .HasForeignKey(o => o.OrderId);
+                .HasForeignKey(o => o.ItemId);
         }
     }
 }

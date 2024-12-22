@@ -5,6 +5,7 @@ using ECommerce.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,10 +14,9 @@ namespace ECommerce.Core.RepositoryInterfaces
     public interface IOrdersRepository
     {
         Task<IOrderDTO> GetDtoByIdAsync(Guid id, bool withItems = false);
-        Task<List<IOrderDTO>> GetDtosAsync(int page, int pageSize, bool withItems = false);
-        Task<List<IOrderDTO>> GetDtosBySpecificationAsync(IOrderSpecification spec, int page, int pageSize, bool withItems = false);
+        Task<List<IOrderDTO>> GetDtosByStatusAsync(string starusStr, int page, int pageSize, bool withItems = false);
         Task<Guid> CreateAsync(Order order);
-        Guid Edit(Order order);
+        Task<Guid> EditAsync(Order order);
         Task DeleteAsync(Guid id);
     }
 }

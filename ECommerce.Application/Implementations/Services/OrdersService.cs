@@ -1,5 +1,4 @@
-﻿using Application.Implementations.Specifications;
-using ECommerce.Core.Aggregates;
+﻿using ECommerce.Core.Aggregates;
 using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.Core.ServiceInterfaces;
 using ECommerce.Core.OtherInterfaces;
@@ -10,8 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
-namespace Application.Implementations.Services
+namespace ECommerce.Application.Implementations.Services
 {
     public class OrdersService : IOrdersService
     {
@@ -22,38 +22,27 @@ namespace Application.Implementations.Services
             _repo = repository;
         }
 
-        public IOrderSpecification ByStatusSpec(string statusStr)
-        {
-            return new HasSuchStatusSpec(statusStr);
-        }
-
-        public async Task<List<IOrderDTO>> GetbyStatusAsync(string statusStr, int page, int pageSize, bool withItems = false)
-        {
-            var spec = this.ByStatusSpec(statusStr);
-            var dtos = await _repo.GetDtosBySpecificationAsync(spec, page, pageSize, withItems);
-            return dtos;
-        }
-
         public async Task SubmitShippingAsync(Guid id, DateTime shipmentDate)
         {
-            var orderDTO = await _repo.GetDtoByIdAsync(id);
-            var order = orderDTO.GetOriginalObject();
+            var orderDto = await _repo.GetDtoByIdAsync(id);
+            var order = orderDto.GetOriginalObject();
             order.ChangeStatusOrFail(new ShippingOrderStatus(shipmentDate));
-            _repo.Edit(order);
+            await _repo.EditAsync(order);
         }
 
         public async Task CompleteAsync(Guid id)
         {
-            var orderDTO = await _repo.GetDtoByIdAsync(id);
-            var order = orderDTO.GetOriginalObject();
+            var orderDto = await _repo.GetDtoByIdAsync(id);
+            var order = orderDto.GetOriginalObject();
             order.ChangeStatusOrFail(new ShippedOrderStatus());
-            _repo.Edit(order);
+            await _repo.EditAsync(order);
         }
 
         public async Task DeleteAsync(Guid id)
         {
-            var orderDTO = await _repo.GetDtoByIdAsync(id);
-            if (orderDTO.GetOriginalObject().Status.Value == OrderStatusEnum.New)
+            var orderDto = await _repo.GetDtoByIdAsync(id);
+            var order = orderDto.GetOriginalObject();
+            if (order.Status.Value == OrderStatusEnum.New)
             {
                 await _repo.DeleteAsync(id);
                 return;

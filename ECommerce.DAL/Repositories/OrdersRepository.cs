@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ECommerce.Core.OtherInterfaces;
+using System.Linq.Expressions;
 
 namespace ECommerce.DAL.Repositories
 {
@@ -46,41 +47,19 @@ namespace ECommerce.DAL.Repositories
             return orderDto;
         }
 
-        public async Task<List<IOrderDTO>> GetDtosAsync(int page, int pageSize, bool withItems = false)
+        public async Task<List<IOrderDTO>> GetDtosByStatusAsync(string starusStr, int page, int pageSize, bool withItems = false)
         {
-            var ordersQuery = _dbContext.Orders
-                .AsNoTracking()
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize);
-
+            var ordersQuery = _dbContext.Orders.AsNoTracking();
             if (withItems)
             {
                 ordersQuery = ordersQuery.Include(o => o.OrderItems);
             }
 
             var orderDtos = await ordersQuery
-                .ProjectTo<OrderWebDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
-
-            return new List<IOrderDTO>(orderDtos);
-        }
-
-        public async Task<List<IOrderDTO>> GetDtosBySpecificationAsync(IOrderSpecification spec, int page, int pageSize, bool withItems = false)
-        {
-            var ordersQuery = _dbContext.Orders
-                .AsNoTracking()
-                .ProjectTo<OrderWebDTO>(_mapper.ConfigurationProvider)
-                .Where(spec.ToExpression())
-                .ProjectTo<OrderWebDTO>(_mapper.ConfigurationProvider);
-            
-            if (withItems)
-            {
-                ordersQuery = ordersQuery.Include(o => o.OrderItems);
-            }
-
-            var orderDtos = await ordersQuery
+                .Where(orderEntity => orderEntity.Status == starusStr)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
+                .ProjectTo<OrderWebDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
             return new List<IOrderDTO>(orderDtos);
@@ -88,28 +67,42 @@ namespace ECommerce.DAL.Repositories
 
         public async Task<Guid> CreateAsync(Order order)
         {
-            var orderDto = new OrderWebDTO();
-            orderDto.SetDataFromObject(order);
-            var orderEntry = await _dbContext.AddAsync(_mapper.Map<OrderEntity>(orderDto));
+            var orderNumber = await this.GetNewOrderNumberAsync();
+
+            var orderDto = new OrderWebDTO(order);
+            orderDto.OrderDate = DateTime.UtcNow;
+            orderDto.OrderNumber = orderNumber;
+
+            var orderEntry = await _dbContext.Orders.AddAsync(_mapper.Map<OrderEntity>(orderDto));
             return orderEntry.Entity.Id;
         }
 
-        public Guid Edit(Order order)
+        public async Task<Guid> EditAsync(Order order)
         {
-            var orderDto = new OrderWebDTO();
-            orderDto.SetDataFromObject(order);
-            var orderEntry = _dbContext.Update(_mapper.Map<OrderEntity>(orderDto));
-            return orderEntry.Entity.Id;
+            var orderEntity = await _dbContext.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.Id == order.Id);
+            if (orderEntity == null)
+            {
+                throw new NullReferenceException("Order not found");
+            }
+            var orderDto = new OrderWebDTO(order);
+            _dbContext.Orders.Update(_mapper.Map<OrderEntity>(orderDto));
+            return orderEntity.Id;
         }
 
         public async Task DeleteAsync(Guid id)
         {
-            var orderEntity = await _dbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
+            var orderEntity = await _dbContext.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id);
             if (orderEntity == null)
             {
                 throw new NullReferenceException("Order not found");
             }
             _dbContext.Orders.Remove(orderEntity);
+        }
+
+        private async Task<long> GetNewOrderNumberAsync()
+        {
+            var ordersCount = await _dbContext.Orders.AsNoTracking().CountAsync();
+            return ordersCount + 1;
         }
     }
 }

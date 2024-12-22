@@ -99,8 +99,8 @@ namespace ECommerce.DAL.Migrations
                 {
                     table.PrimaryKey("PK_OrderItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderItems_Items_OrderId",
-                        column: x => x.OrderId,
+                        name: "FK_OrderItems_Items_ItemId",
+                        column: x => x.ItemId,
                         principalTable: "Items",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -117,8 +117,8 @@ namespace ECommerce.DAL.Migrations
                 columns: new[] { "Id", "Address", "Code", "Discount", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("46d04907-697e-4faa-b691-c1c9db2ad9fd"), "", "0000-2025", 10m, "user" },
-                    { new Guid("4f36d990-28c9-416b-97f3-7535d1e45422"), "", "0000-2000", 99m, "admin" }
+                    { new Guid("08f7449e-b0b8-4a45-bbe8-dd8c6c6f3744"), "", "0000-2000", 99m, "admin" },
+                    { new Guid("98a9116c-3b90-4822-a344-fa3e4de123c0"), "", "0000-2025", 10m, "user" }
                 });
 
             migrationBuilder.InsertData(
@@ -126,11 +126,11 @@ namespace ECommerce.DAL.Migrations
                 columns: new[] { "Id", "Category", "Code", "Name", "Price" },
                 values: new object[,]
                 {
-                    { new Guid("32134814-44e3-4ab6-a4be-1f23ae4d8e5e"), "Dress", "20-3333-YY44", "Платье", 10000m },
-                    { new Guid("476a0bd3-1bf9-46ec-b469-725149e20587"), "Jeans", "24-3333-YY44", "Джинсы", 2599.99m },
-                    { new Guid("7193beea-8780-4f95-bce5-b3e7bbdc75fb"), "Shoes", "21-3333-YY44", "Туфли", 8500m },
-                    { new Guid("8e4c3d92-b535-4e2f-b239-880a3c6709ba"), "Hat", "23-3333-YY44", "Шляпа 'как-раз'", 7777m },
-                    { new Guid("93e3c287-0ce7-4fc0-9269-b50c2ce5998f"), "Hat", "22-3333-YY44", "Кепка", 1000m }
+                    { new Guid("0ec0baaa-c34b-44b3-ba27-bce70431d942"), "Hat", "23-3333-YY44", "Шляпа 'как-раз'", 7777m },
+                    { new Guid("84ae9598-d584-4782-8ecd-8753a67e3092"), "Jeans", "24-3333-YY44", "Джинсы", 2599.99m },
+                    { new Guid("a2c95cc6-7e50-4ca4-b910-1d6bb86f94ec"), "Dress", "20-3333-YY44", "Платье", 10000m },
+                    { new Guid("b3c45431-adc2-455c-a89e-93d45ed972f3"), "Hat", "22-3333-YY44", "Кепка", 1000m },
+                    { new Guid("d6272705-879f-4683-9097-980930a9df4c"), "Shoes", "21-3333-YY44", "Туфли", 8500m }
                 });
 
             migrationBuilder.InsertData(
@@ -138,8 +138,8 @@ namespace ECommerce.DAL.Migrations
                 columns: new[] { "Id", "CustomerId", "Password", "Username" },
                 values: new object[,]
                 {
-                    { new Guid("4e9bf998-4aeb-4fa1-8932-685b64e1b97f"), new Guid("46d04907-697e-4faa-b691-c1c9db2ad9fd"), "user", "user" },
-                    { new Guid("d1733f2d-825b-4d31-a006-bcd525220da0"), new Guid("4f36d990-28c9-416b-97f3-7535d1e45422"), "admin", "admin" }
+                    { new Guid("16b4c5f9-238c-4524-a1a2-e782b65c2d35"), new Guid("08f7449e-b0b8-4a45-bbe8-dd8c6c6f3744"), "admin", "admin" },
+                    { new Guid("88a8be83-f1d0-437e-957a-ba4f06d5ff00"), new Guid("98a9116c-3b90-4822-a344-fa3e4de123c0"), "user", "user" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -147,6 +147,11 @@ namespace ECommerce.DAL.Migrations
                 table: "Accounts",
                 column: "CustomerId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_ItemId",
+                table: "OrderItems",
+                column: "ItemId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_OrderId",

@@ -12,8 +12,6 @@ namespace ECommerce.Core.ServiceInterfaces
 {
     public interface IOrdersService
     {
-        IOrderSpecification ByStatusSpec(string statusStr);
-        Task<List<IOrderDTO>> GetbyStatusAsync(string statusStr, int page, int pageSize, bool withItems = false);
         Task SubmitShippingAsync(Guid id, DateTime shipmentDate);
         Task CompleteAsync(Guid id);
         Task DeleteAsync(Guid id);

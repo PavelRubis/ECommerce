@@ -24,17 +24,17 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IOrderDTO> Get(Guid id)
+        public async Task<IActionResult> Get(Guid id)
         {
             var orderDTO = await _unitOfWork.OrdersRepository.GetDtoByIdAsync(id);
-            return orderDTO;
+            return Ok(orderDTO);
         }
 
-        [HttpGet("{status}/{page}/{pageSize}/{withItems}")]
-        public async Task<List<IOrderDTO>> GetbyStatusAsync(string statusStr, int page, int pageSize, bool withItems = false)
+        [HttpGet("{statusStr}/{page}/{pageSize}/{withItems}")]
+        public async Task<IActionResult> GetbyStatusAsync(string statusStr, int page, int pageSize, bool withItems = false)
         {
-            var dtos = await _ordersService.GetbyStatusAsync(statusStr, page, pageSize, withItems);
-            return dtos;
+            var dtos = await _unitOfWork.OrdersRepository.GetDtosByStatusAsync(statusStr, page, pageSize, withItems);
+            return Ok(dtos);
         }
 
         [HttpPost("Create")]

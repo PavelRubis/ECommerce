@@ -48,26 +48,9 @@ namespace ECommerce.DAL.DTOs
         public string Status { get; set; }
         public List<OrderItemWebDTO> OrderItems { get; set; } = new List<OrderItemWebDTO>();
 
-        public Order GetOriginalObject()
-        {
-            var status = default(OrderStatus);
-            switch (Enum.Parse<OrderStatusEnum>(this.Status))
-            {
-                case OrderStatusEnum.New:
-                    status = new NewOrderStatus(this.OrderDate, this.OrderNumber);
-                    break;
-                case OrderStatusEnum.Shipping:
-                    status = new ShippingOrderStatus(this.ShipmentDate);
-                    break;
-                case OrderStatusEnum.Shipped:
-                    status = new ShippedOrderStatus();
-                    break;
-            }
-            var items = this.OrderItems.Select(item => item.GetOriginalObject()).ToList();
-            return new Order(this.CustomerId, status, items, this.Id);
-        }
+        public OrderWebDTO() { }
 
-        public void SetDataFromObject(Order order)
+        public OrderWebDTO(Order order)
         {
             this.Id = order.Id;
             this.CustomerId = order.CustomerId;
@@ -97,15 +80,34 @@ namespace ECommerce.DAL.DTOs
                 return itemEntity;
             }));
         }
+
+        public Order GetOriginalObject()
+        {
+            var status = default(OrderStatus);
+            switch (Enum.Parse<OrderStatusEnum>(this.Status))
+            {
+                case OrderStatusEnum.New:
+                    status = new NewOrderStatus(this.OrderDate, this.OrderNumber);
+                    break;
+                case OrderStatusEnum.Shipping:
+                    status = new ShippingOrderStatus(this.ShipmentDate);
+                    break;
+                case OrderStatusEnum.Shipped:
+                    status = new ShippedOrderStatus();
+                    break;
+            }
+            var items = this.OrderItems.Select(item => item.GetOriginalObject()).ToList();
+            var result = new Order(this.CustomerId, status, items, this.Id);
+            result.Items.ForEach(item => item.OrderId = result.Id);
+            return result;
+        }
     }
 
     public class OrderItemWebDTO : IDTO<OrderItem>
     {
         public Guid Id { get; set; }
         public Guid OrderId { get; set; }
-        public OrderEntity? Order { get; set; }
         public Guid ItemId { get; set; }
-        public ItemEntity? Item { get; set; }
         public int ItemsCount { get; set; }
         public decimal ItemPrice { get; set; }
 

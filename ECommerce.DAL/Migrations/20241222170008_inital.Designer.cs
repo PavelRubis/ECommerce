@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ECommerce.DAL.Migrations
 {
     [DbContext(typeof(ECommerceDbContext))]
-    [Migration("20241221175655_inital")]
+    [Migration("20241222170008_inital")]
     partial class inital
     {
         /// <inheritdoc />
@@ -52,15 +52,15 @@ namespace ECommerce.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d1733f2d-825b-4d31-a006-bcd525220da0"),
-                            CustomerId = new Guid("4f36d990-28c9-416b-97f3-7535d1e45422"),
+                            Id = new Guid("16b4c5f9-238c-4524-a1a2-e782b65c2d35"),
+                            CustomerId = new Guid("08f7449e-b0b8-4a45-bbe8-dd8c6c6f3744"),
                             Password = "admin",
                             Username = "admin"
                         },
                         new
                         {
-                            Id = new Guid("4e9bf998-4aeb-4fa1-8932-685b64e1b97f"),
-                            CustomerId = new Guid("46d04907-697e-4faa-b691-c1c9db2ad9fd"),
+                            Id = new Guid("88a8be83-f1d0-437e-957a-ba4f06d5ff00"),
+                            CustomerId = new Guid("98a9116c-3b90-4822-a344-fa3e4de123c0"),
                             Password = "user",
                             Username = "user"
                         });
@@ -94,7 +94,7 @@ namespace ECommerce.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("4f36d990-28c9-416b-97f3-7535d1e45422"),
+                            Id = new Guid("08f7449e-b0b8-4a45-bbe8-dd8c6c6f3744"),
                             Address = "",
                             Code = "0000-2000",
                             Discount = 99m,
@@ -102,7 +102,7 @@ namespace ECommerce.DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("46d04907-697e-4faa-b691-c1c9db2ad9fd"),
+                            Id = new Guid("98a9116c-3b90-4822-a344-fa3e4de123c0"),
                             Address = "",
                             Code = "0000-2025",
                             Discount = 10m,
@@ -139,7 +139,7 @@ namespace ECommerce.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("32134814-44e3-4ab6-a4be-1f23ae4d8e5e"),
+                            Id = new Guid("a2c95cc6-7e50-4ca4-b910-1d6bb86f94ec"),
                             Category = "Dress",
                             Code = "20-3333-YY44",
                             Name = "Платье",
@@ -147,7 +147,7 @@ namespace ECommerce.DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("7193beea-8780-4f95-bce5-b3e7bbdc75fb"),
+                            Id = new Guid("d6272705-879f-4683-9097-980930a9df4c"),
                             Category = "Shoes",
                             Code = "21-3333-YY44",
                             Name = "Туфли",
@@ -155,7 +155,7 @@ namespace ECommerce.DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("93e3c287-0ce7-4fc0-9269-b50c2ce5998f"),
+                            Id = new Guid("b3c45431-adc2-455c-a89e-93d45ed972f3"),
                             Category = "Hat",
                             Code = "22-3333-YY44",
                             Name = "Кепка",
@@ -163,7 +163,7 @@ namespace ECommerce.DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("8e4c3d92-b535-4e2f-b239-880a3c6709ba"),
+                            Id = new Guid("0ec0baaa-c34b-44b3-ba27-bce70431d942"),
                             Category = "Hat",
                             Code = "23-3333-YY44",
                             Name = "Шляпа 'как-раз'",
@@ -171,7 +171,7 @@ namespace ECommerce.DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("476a0bd3-1bf9-46ec-b469-725149e20587"),
+                            Id = new Guid("84ae9598-d584-4782-8ecd-8753a67e3092"),
                             Category = "Jeans",
                             Code = "24-3333-YY44",
                             Name = "Джинсы",
@@ -228,6 +228,8 @@ namespace ECommerce.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ItemId");
+
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderItems");
@@ -259,7 +261,7 @@ namespace ECommerce.DAL.Migrations
                 {
                     b.HasOne("ECommerce.DAL.Models.ItemEntity", "Item")
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderId")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
