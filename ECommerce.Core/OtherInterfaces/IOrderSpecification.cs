@@ -1,16 +1,14 @@
-﻿using ECommerce.Core.Aggregates;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECommerce.Core.Utils
+namespace ECommerce.Core.OtherInterfaces
 {
-    public interface IOrderSpecDTO
+    public interface IOrderSpecification
     {
-        public Guid Id { get; set; }
-        public string Status { get; set; }
+        Expression<Func<IOrderDTO, bool>> ToExpression();
     }
 }

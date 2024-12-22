@@ -1,5 +1,5 @@
 ﻿using ECommerce.Core.Aggregates;
-using ECommerce.Core.Utils;
+using ECommerce.Core.OtherInterfaces;
 using ECommerce.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace Application.Implementations.Specifications
             _statusStr = statusStr;
         }
 
-        public Expression<Func<IOrderSpecDTO, bool>> ToExpression()
+        public Expression<Func<IOrderDTO, bool>> ToExpression()
         {
             return orderEntity => orderEntity.Status == _statusStr;
         }

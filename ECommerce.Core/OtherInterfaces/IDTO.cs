@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECommerce.Core.Utils
+namespace ECommerce.Core.OtherInterfaces
 {
     public interface IDTO<T>
     {
-        T GetOriginalObject();
-        void SetDataFromObject(T obj);
     }
 }

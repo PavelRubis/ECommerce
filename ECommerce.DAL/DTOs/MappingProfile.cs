@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using ECommerce.Core.Aggregates;
-using ECommerce.Core.Utils;
+using ECommerce.Core.OtherInterfaces;
 using ECommerce.DAL.Models;
 
 namespace ECommerce.DAL.DTOs
@@ -26,6 +26,9 @@ namespace ECommerce.DAL.DTOs
             CreateMap<ItemEntity, ItemWebDTO>();
             CreateMap<Item, ItemWebDTO>();
             CreateMap<ItemWebDTO, Item>();
+
+            CreateMap<OrderWebDTO, OrderEntity>();
+            CreateMap<OrderEntity, OrderWebDTO>();
         }
     }
 

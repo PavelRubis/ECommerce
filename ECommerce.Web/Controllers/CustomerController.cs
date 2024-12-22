@@ -2,7 +2,7 @@
 using ECommerce.Core.Aggregates;
 using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.Core.ServiceInterfaces;
-using ECommerce.Core.Utils;
+using ECommerce.Core.OtherInterfaces;
 using ECommerce.DAL.DTOs;
 using ECommerce.DAL.Models;
 using ECommerce.DAL.UnitOfWork;

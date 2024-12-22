@@ -1,7 +1,8 @@
 ﻿using ECommerce.Core.Aggregates;
 using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.Core.ServiceInterfaces;
-using ECommerce.Core.Utils;
+using ECommerce.Core.OtherInterfaces;
+using ECommerce.DAL.DTOs;
 using ECommerce.DAL.Models;
 using ECommerce.DAL.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
@@ -23,25 +24,26 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IDTO<Order>> Get(Guid id)
+        public async Task<IOrderDTO> Get(Guid id)
         {
             var orderDTO = await _unitOfWork.OrdersRepository.GetDtoByIdAsync(id);
             return orderDTO;
         }
 
         [HttpGet("{status}/{page}/{pageSize}/{withItems}")]
-        public async Task<List<IDTO<Order>>> GetbyStatusAsync(string statusStr, int page, int pageSize, bool withItems = false)
+        public async Task<List<IOrderDTO>> GetbyStatusAsync(string statusStr, int page, int pageSize, bool withItems = false)
         {
             var dtos = await _ordersService.GetbyStatusAsync(statusStr, page, pageSize, withItems);
             return dtos;
         }
 
         [HttpPost("Create")]
-        public async Task<IActionResult> Create([FromBody] OrderEntity orderEntity)
+        public async Task<IActionResult> Create([FromBody] OrderWebDTO orderDto)
         {
             try
             {
-                var id = await _unitOfWork.OrdersRepository.CreateAsync(orderEntity.GetOriginalObject());
+                _unitOfWork.BeginTransaction();
+                var id = await _unitOfWork.OrdersRepository.CreateAsync(orderDto.GetOriginalObject());
                 _unitOfWork.CommitTransaction();
                 return Ok(id);
             }
@@ -61,6 +63,7 @@ namespace ECommerce.Web.Controllers
         {
             try
             {
+                _unitOfWork.BeginTransaction();
                 await _ordersService.SubmitShippingAsync(id, DateTime.UtcNow);
                 _unitOfWork.CommitTransaction();
             }
@@ -81,6 +84,7 @@ namespace ECommerce.Web.Controllers
         {
             try
             {
+                _unitOfWork.BeginTransaction();
                 await _ordersService.CompleteAsync(id);
                 _unitOfWork.CommitTransaction();
             }
@@ -101,6 +105,7 @@ namespace ECommerce.Web.Controllers
         {
             try
             {
+                _unitOfWork.BeginTransaction();
                 await _ordersService.DeleteAsync(id);
                 _unitOfWork.CommitTransaction();
             }

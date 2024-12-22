@@ -1,5 +1,4 @@
 ﻿using ECommerce.Core.Entities;
-using ECommerce.Core.Utils;
 using ECommerce.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -29,14 +28,9 @@ namespace ECommerce.Core.Aggregates
         {
             if (!this.Status.CanBeChangedTo(newStatus.Value))
             {
-                throw new ArgumentException("Invalid order status change.");
+                throw new InvalidOperationException("Invalid order status change.");
             }
             this.Status = newStatus.Clone();
         }
-    }
-
-    public interface IOrderSpecification
-    {
-        Expression<Func<IOrderSpecDTO, bool>> ToExpression();
     }
 }

@@ -27,7 +27,7 @@ namespace ECommerce.DAL.UnitOfWork
 
         public IOrdersRepository OrdersRepository
         {
-            get { return _ordersRepository ??= new OrdersRepository(_context); }
+            get { return _ordersRepository ??= new OrdersRepository(_context, _mapper); }
         }
 
         public ICRUDRepository<Item> ItemsRepository

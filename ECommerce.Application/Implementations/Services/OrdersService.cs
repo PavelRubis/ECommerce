@@ -2,7 +2,7 @@
 using ECommerce.Core.Aggregates;
 using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.Core.ServiceInterfaces;
-using ECommerce.Core.Utils;
+using ECommerce.Core.OtherInterfaces;
 using ECommerce.Core.ValueObjects;
 using ECommerce.DAL.Models;
 using System;
@@ -27,7 +27,7 @@ namespace Application.Implementations.Services
             return new HasSuchStatusSpec(statusStr);
         }
 
-        public async Task<List<IDTO<Order>>> GetbyStatusAsync(string statusStr, int page, int pageSize, bool withItems = false)
+        public async Task<List<IOrderDTO>> GetbyStatusAsync(string statusStr, int page, int pageSize, bool withItems = false)
         {
             var spec = this.ByStatusSpec(statusStr);
             var dtos = await _repo.GetDtosBySpecificationAsync(spec, page, pageSize, withItems);
@@ -56,7 +56,9 @@ namespace Application.Implementations.Services
             if (orderDTO.GetOriginalObject().Status.Value == OrderStatusEnum.New)
             {
                 await _repo.DeleteAsync(id);
+                return;
             }
+            throw new InvalidOperationException("Order with such status can not be deleted.");
         }
     }
 }

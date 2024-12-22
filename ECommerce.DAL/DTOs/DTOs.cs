@@ -1,5 +1,7 @@
 ﻿using ECommerce.Core.Aggregates;
-using ECommerce.Core.Utils;
+using ECommerce.Core.Entities;
+using ECommerce.Core.OtherInterfaces;
+using ECommerce.Core.ValueObjects;
 using ECommerce.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -17,20 +19,6 @@ namespace ECommerce.DAL.DTOs
         public string Address { get; set; } = string.Empty;
         public decimal Discount { get; set; } = decimal.Zero;
         public AccountWebDTO Account { get; set; }
-
-        public Customer GetOriginalObject()
-        {
-            return Customer.CreateOrFail(this.Name, this.Code, this.Address, this.Discount, this.Id);
-        }
-
-        public void SetDataFromObject(Customer obj)
-        {
-            Id = obj.Id;
-            Name = obj.Name;
-            Code = obj.Code;
-            Address = obj.Address;
-            Discount = obj.Discount;
-        }
     }
 
     public class AccountWebDTO
@@ -41,7 +29,6 @@ namespace ECommerce.DAL.DTOs
         public Guid CustomerId { get; set; }
     }
 
-
     public class ItemWebDTO : IDTO<Item>
     {
         public Guid Id { get; set; }
@@ -49,19 +36,91 @@ namespace ECommerce.DAL.DTOs
         public string Name { get; set; }
         public decimal Price { get; set; }
         public string Category { get; set; }
+    }
 
-        public Item GetOriginalObject()
+    public class OrderWebDTO : IOrderDTO
+    {
+        public Guid Id { get; set; }
+        public Guid CustomerId { get; set; }
+        public DateTime OrderDate { get; set; }
+        public DateTime ShipmentDate { get; set; }
+        public long OrderNumber { get; set; }
+        public string Status { get; set; }
+        public List<OrderItemWebDTO> OrderItems { get; set; } = new List<OrderItemWebDTO>();
+
+        public Order GetOriginalObject()
         {
-            return Item.CreateOrFail(this.Code, this.Name, this.Price, Enum.Parse<ItemCategory>(Category), this.Id);
+            var status = default(OrderStatus);
+            switch (Enum.Parse<OrderStatusEnum>(this.Status))
+            {
+                case OrderStatusEnum.New:
+                    status = new NewOrderStatus(this.OrderDate, this.OrderNumber);
+                    break;
+                case OrderStatusEnum.Shipping:
+                    status = new ShippingOrderStatus(this.ShipmentDate);
+                    break;
+                case OrderStatusEnum.Shipped:
+                    status = new ShippedOrderStatus();
+                    break;
+            }
+            var items = this.OrderItems.Select(item => item.GetOriginalObject()).ToList();
+            return new Order(this.CustomerId, status, items, this.Id);
         }
 
-        public void SetDataFromObject(Item obj)
+        public void SetDataFromObject(Order order)
+        {
+            this.Id = order.Id;
+            this.CustomerId = order.CustomerId;
+            switch (order.Status.Value)
+            {
+                case OrderStatusEnum.New:
+                    {
+                        var typedStatus = order.Status as NewOrderStatus;
+                        this.OrderDate = typedStatus.OrderDate;
+                        this.OrderNumber = typedStatus.OrderNumber;
+                    }
+                    break;
+                case OrderStatusEnum.Shipping:
+                    {
+                        var typedStatus = order.Status as ShippingOrderStatus;
+                        this.ShipmentDate = typedStatus.ShipmentDate;
+                    }
+                    break;
+                case OrderStatusEnum.Shipped:
+                    break;
+            }
+            this.Status = order.Status.Value.ToString();
+            this.OrderItems = new List<OrderItemWebDTO>(order.Items.Select(item =>
+            {
+                var itemEntity = new OrderItemWebDTO();
+                itemEntity.SetDataFromObject(item);
+                return itemEntity;
+            }));
+        }
+    }
+
+    public class OrderItemWebDTO : IDTO<OrderItem>
+    {
+        public Guid Id { get; set; }
+        public Guid OrderId { get; set; }
+        public OrderEntity? Order { get; set; }
+        public Guid ItemId { get; set; }
+        public ItemEntity? Item { get; set; }
+        public int ItemsCount { get; set; }
+        public decimal ItemPrice { get; set; }
+
+        public OrderItem GetOriginalObject()
+        {
+            return OrderItem.CreateOrFail(this.OrderId, this.ItemId, this.ItemsCount, this.ItemPrice);
+        }
+
+        public void SetDataFromObject(OrderItem obj)
         {
             this.Id = obj.Id;
-            this.Code = obj.Code;
-            this.Name = obj.Name;
-            this.Price = obj.Price;
-            this.Category = obj.Category.ToString();
+            this.OrderId = obj.OrderId;
+            this.ItemId = obj.ItemId;
+            this.ItemsCount = obj.ItemsCount;
+            this.ItemPrice = obj.ItemPrice;
         }
     }
 }

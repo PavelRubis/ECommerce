@@ -1,5 +1,5 @@
 ﻿using ECommerce.Core.Aggregates;
-using ECommerce.Core.Utils;
+using ECommerce.Core.OtherInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
