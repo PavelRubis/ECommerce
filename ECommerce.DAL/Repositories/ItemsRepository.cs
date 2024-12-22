@@ -3,21 +3,29 @@ using ECommerce.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.Core.Utils;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using ECommerce.DAL.DTOs;
 
 namespace ECommerce.DAL.Repositories
 {
     public class ItemsRepository : ICRUDRepository<Item>
     {
         private readonly ECommerceDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public ItemsRepository(ECommerceDbContext dbContext)
+        public ItemsRepository(ECommerceDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public async Task<IDTO<Item>> GetDtoByIdAsync(Guid id)
         {
-            var entity = await _dbContext.Items.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+            var entity = await _dbContext.Items
+                .AsNoTracking()
+                .ProjectTo<ItemWebDTO>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(i => i.Id == id);
             if (entity == null)
             {
                 throw new NullReferenceException("Item not found");
@@ -29,6 +37,7 @@ namespace ECommerce.DAL.Repositories
         {
             var items = await _dbContext.Items
                 .AsNoTracking()
+                .ProjectTo<ItemWebDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
             return new List<IDTO<Item>>(items);
         }
@@ -39,27 +48,25 @@ namespace ECommerce.DAL.Repositories
                 .AsNoTracking()
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
+                .ProjectTo<ItemWebDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
             return new List<IDTO<Item>>(items);
         }
 
         public async Task<Guid> CreateAsync(Item item)
         {
-            var itemEntity = new ItemEntity();
-            itemEntity.SetDataFromObject(item);
-            var entry = await _dbContext.Items.AddAsync(itemEntity);
+            var entry = await _dbContext.Items.AddAsync(_mapper.Map<ItemEntity>(item));
             return entry.Entity.Id;
         }
 
         public async Task<Guid> EditAsync(Item item)
         {
-            var entity = await _dbContext.Items.FirstOrDefaultAsync(i => i.Id == item.Id);
+            var entity = await _dbContext.Items.AsNoTracking().FirstOrDefaultAsync(i => i.Id == item.Id);
             if (entity == null)
             {
                 throw new NullReferenceException("Item not found");
             }
-            entity.SetDataFromObject(item);
-            _dbContext.Items.Update(entity);
+            _dbContext.Items.Update(_mapper.Map<ItemEntity>(item));
             return entity.Id;
         }
 

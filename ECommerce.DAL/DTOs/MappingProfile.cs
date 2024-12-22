@@ -21,6 +21,11 @@ namespace ECommerce.DAL.DTOs
 
             CreateMap<AccountEntity, AccountWebDTO>();
             CreateMap<AccountWebDTO, AccountEntity>();
+
+            CreateMap<Item, ItemEntity>();
+            CreateMap<ItemEntity, ItemWebDTO>();
+            CreateMap<Item, ItemWebDTO>();
+            CreateMap<ItemWebDTO, Item>();
         }
     }
 

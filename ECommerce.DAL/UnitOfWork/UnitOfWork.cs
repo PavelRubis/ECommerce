@@ -32,7 +32,7 @@ namespace ECommerce.DAL.UnitOfWork
 
         public ICRUDRepository<Item> ItemsRepository
         {
-            get { return _itemsRepository ??= new ItemsRepository(_context); }
+            get { return _itemsRepository ??= new ItemsRepository(_context, _mapper); }
         }
 
         public ICRUDRepository<Customer> CustomersRepository

@@ -53,11 +53,11 @@ namespace ECommerce.Web.Controllers
             {
                 _unitOfWork.BeginTransaction();
                 var customer = _mapper.Map<Customer>(customerDto);
-                var id = await _unitOfWork.CustomersRepository.CreateAsync(customer);
-                customerDto.Account.CustomerId = id;
-                await _unitOfWork.AccountsRepository.CreateAsync(customerDto.Account);
+                var customerId = await _unitOfWork.CustomersRepository.CreateAsync(customer);
+                customerDto.Account.CustomerId = customerId;
+                var accountId = await _unitOfWork.AccountsRepository.CreateAsync(customerDto.Account);
                 _unitOfWork.CommitTransaction();
-                return Ok(id);
+                return Ok(new { customerId , accountId });
             }
             catch (Exception ex)
             {
@@ -77,11 +77,11 @@ namespace ECommerce.Web.Controllers
             {
                 _unitOfWork.BeginTransaction();
                 var customer = _mapper.Map<Customer>(customerDto);
-                var id = await _unitOfWork.CustomersRepository.EditAsync(customer);
-                customerDto.Account.CustomerId = id;
-                await _unitOfWork.AccountsRepository.EditAsync(customerDto.Account);
+                var customerId = await _unitOfWork.CustomersRepository.EditAsync(customer);
+                customerDto.Account.CustomerId = customerId;
+                var accountId = await _unitOfWork.AccountsRepository.EditAsync(customerDto.Account);
                 _unitOfWork.CommitTransaction();
-                return Ok(id);
+                return Ok(new { customerId, accountId });
             }
             catch (Exception ex)
             {

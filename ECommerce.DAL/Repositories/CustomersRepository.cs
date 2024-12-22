@@ -58,18 +58,18 @@ namespace ECommerce.DAL.Repositories
 
         public async Task<Guid> CreateAsync(Customer customer)
         {
-            var entry = await _dbContext.Customers.AddAsync(_mapper.Map<Customer, CustomerEntity>(customer));
+            var entry = await _dbContext.Customers.AddAsync(_mapper.Map<CustomerEntity>(customer));
             return entry.Entity.Id;
         }
 
         public async Task<Guid> EditAsync(Customer customer)
         {
-            var entity = await _dbContext.Customers.FirstOrDefaultAsync(i => i.Id == customer.Id);
+            var entity = await _dbContext.Customers.AsNoTracking().FirstOrDefaultAsync(i => i.Id == customer.Id);
             if (entity == null)
             {
                 throw new NullReferenceException("Customer not found");
             }
-            _dbContext.Customers.Update(_mapper.Map<Customer, CustomerEntity>(customer));
+            _dbContext.Customers.Update(_mapper.Map<CustomerEntity>(customer));
             return customer.Id;
         }
 

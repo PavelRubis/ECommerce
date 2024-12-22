@@ -1,7 +1,9 @@
-﻿using ECommerce.Core.Aggregates;
+﻿using AutoMapper;
+using ECommerce.Core.Aggregates;
 using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.Core.ServiceInterfaces;
 using ECommerce.Core.Utils;
+using ECommerce.DAL.DTOs;
 using ECommerce.DAL.Models;
 using ECommerce.DAL.UnitOfWork;
 using Microsoft.AspNetCore.Http;
@@ -15,38 +17,42 @@ namespace ECommerce.Web.Controllers
     public class ItemsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ItemsController(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public ItemsController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         [HttpGet("{id}")]
-        public async Task<IDTO<Item>> Get(Guid id)
+        public async Task<IActionResult> Get(Guid id)
         {
             var orderDTO = await _unitOfWork.ItemsRepository.GetDtoByIdAsync(id);
-            return orderDTO;
+            return Ok(orderDTO);
         }
 
         [HttpGet("{page}/{pageSize}")]
-        public async Task<List<IDTO<Item>>> GetByPage(int page, int pageSize)
+        public async Task<IActionResult> GetByPage(int page, int pageSize)
         {
             var dtos = await _unitOfWork.ItemsRepository.GetDtosByPageAsync(page, pageSize);
-            return dtos;
+            return Ok(dtos);
         }
 
         [HttpGet("All")]
-        public async Task<List<IDTO<Item>>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
             var dtos = await _unitOfWork.ItemsRepository.GetAllDtosAsync();
-            return dtos;
+            return Ok(dtos);
         }
 
         [HttpPost("Create")]
-        public async Task<IActionResult> Create([FromBody] ItemEntity itemEntity)
+        public async Task<IActionResult> Create([FromBody] ItemWebDTO itemDto)
         {
             try
             {
-                var id = await _unitOfWork.ItemsRepository.CreateAsync(itemEntity.GetOriginalObject());
+                _unitOfWork.BeginTransaction();
+                var item = _mapper.Map<Item>(itemDto);
+                var id = await _unitOfWork.ItemsRepository.CreateAsync(item);
                 _unitOfWork.CommitTransaction();
                 return Ok(id);
             }
@@ -62,11 +68,13 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpPut("Edit")]
-        public async Task<IActionResult> Edit([FromBody] ItemEntity itemEntity)
+        public async Task<IActionResult> Edit([FromBody] ItemWebDTO itemDto)
         {
             try
             {
-                var id = await _unitOfWork.ItemsRepository.CreateAsync(itemEntity.GetOriginalObject());
+                _unitOfWork.BeginTransaction();
+                var item = _mapper.Map<Item>(itemDto);
+                var id = await _unitOfWork.ItemsRepository.EditAsync(item);
                 _unitOfWork.CommitTransaction();
                 return Ok(id);
             }
@@ -86,6 +94,7 @@ namespace ECommerce.Web.Controllers
         {
             try
             {
+                _unitOfWork.BeginTransaction();
                 await _unitOfWork.ItemsRepository.DeleteAsync(id);
                 _unitOfWork.CommitTransaction();
             }

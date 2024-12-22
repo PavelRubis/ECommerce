@@ -30,13 +30,13 @@ namespace ECommerce.DAL.Repositories
 
         public async Task<Guid> EditAsync(AccountWebDTO account)
         {
-            var entity = await _dbContext.Accounts.FirstOrDefaultAsync(i => i.Id == account.Id);
+            var entity = await _dbContext.Accounts.AsNoTracking().FirstOrDefaultAsync(i => i.Id == account.Id);
             if (entity == null)
             {
                 throw new NullReferenceException("Customer not found");
             }
             _dbContext.Accounts.Update(_mapper.Map<AccountEntity>(account));
-            return entity.Id;
+            return account.Id;
         }
     }
 }
