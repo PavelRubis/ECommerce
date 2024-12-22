@@ -42,12 +42,12 @@ namespace ECommerce.Web.Controllers
             try
             {
                 var id = await _unitOfWork.OrdersRepository.CreateAsync(orderEntity.GetOriginalObject());
-                _unitOfWork.Commit();
+                _unitOfWork.CommitTransaction();
                 return Ok(id);
             }
             catch (Exception ex)
             {
-                _unitOfWork.Rollback();
+                _unitOfWork.RollbackTransaction();
                 return BadRequest(ex);
             }
             finally
@@ -62,11 +62,11 @@ namespace ECommerce.Web.Controllers
             try
             {
                 await _ordersService.SubmitShippingAsync(id, DateTime.UtcNow);
-                _unitOfWork.Commit();
+                _unitOfWork.CommitTransaction();
             }
             catch (Exception ex)
             {
-                _unitOfWork.Rollback();
+                _unitOfWork.RollbackTransaction();
                 return BadRequest(ex);
             }
             finally
@@ -82,11 +82,11 @@ namespace ECommerce.Web.Controllers
             try
             {
                 await _ordersService.CompleteAsync(id);
-                _unitOfWork.Commit();
+                _unitOfWork.CommitTransaction();
             }
             catch (Exception ex)
             {
-                _unitOfWork.Rollback();
+                _unitOfWork.RollbackTransaction();
                 return BadRequest(ex);
             }
             finally
@@ -102,11 +102,11 @@ namespace ECommerce.Web.Controllers
             try
             {
                 await _ordersService.DeleteAsync(id);
-                _unitOfWork.Commit();
+                _unitOfWork.CommitTransaction();
             }
             catch (Exception ex)
             {
-                _unitOfWork.Rollback();
+                _unitOfWork.RollbackTransaction();
                 return BadRequest(ex);
             }
             finally

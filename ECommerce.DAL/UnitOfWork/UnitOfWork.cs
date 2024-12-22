@@ -1,4 +1,5 @@
-﻿using ECommerce.Core.Aggregates;
+﻿using AutoMapper;
+using ECommerce.Core.Aggregates;
 using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.DAL.Repositories;
 using System;
@@ -16,10 +17,12 @@ namespace ECommerce.DAL.UnitOfWork
         private ICRUDRepository<Item> _itemsRepository;
         private ICRUDRepository<Customer> _customersRepository;
         private AccountsRepository _accountsRepository;
+        private IMapper _mapper;
 
-        public UnitOfWork(ECommerceDbContext context)
+        public UnitOfWork(ECommerceDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public IOrdersRepository OrdersRepository
@@ -31,22 +34,28 @@ namespace ECommerce.DAL.UnitOfWork
         {
             get { return _itemsRepository ??= new ItemsRepository(_context); }
         }
+
         public ICRUDRepository<Customer> CustomersRepository
         {
-            get { return _customersRepository ??= new CustomersRepository(_context); }
-        }
-        public AccountsRepository AccountsRepository
-        {
-            get { return _accountsRepository ??= new AccountsRepository(_context); }
+            get { return _customersRepository ??= new CustomersRepository(_context, _mapper); }
         }
 
-        public void Commit()
+        public AccountsRepository AccountsRepository
+        {
+            get { return _accountsRepository ??= new AccountsRepository(_context, _mapper); }
+        }
+        public void BeginTransaction()
+        {
+            _context.BeginTransaction();
+        }
+
+        public void CommitTransaction()
         {
             _context.SaveChanges();
             _context.CommitTransaction();
         }
 
-        public void Rollback()
+        public void RollbackTransaction()
         {
             _context.RollbackTransaction();
         }

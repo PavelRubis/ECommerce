@@ -15,7 +15,8 @@ namespace ECommerce.DAL.UnitOfWork
         ICRUDRepository<Item> ItemsRepository { get; }
         ICRUDRepository<Customer> CustomersRepository { get; }
         AccountsRepository AccountsRepository { get; }
-        void Commit();
-        void Rollback();
+        void BeginTransaction();
+        void CommitTransaction();
+        void RollbackTransaction();
     }
 }

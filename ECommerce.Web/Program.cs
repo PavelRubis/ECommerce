@@ -1,7 +1,9 @@
 using ECommerce.Core.Aggregates;
 using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.DAL;
+using ECommerce.DAL.DTOs;
 using ECommerce.DAL.Repositories;
+using ECommerce.DAL.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
 namespace Web
@@ -13,7 +15,9 @@ namespace Web
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
 
-            builder.Services.AddControllers();
+            builder.Services
+                .AddControllers()
+                .AddNewtonsoftJson(); ;
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<ECommerceDbContext>
             (
@@ -26,6 +30,8 @@ namespace Web
             builder.Services.AddScoped<ICRUDRepository<Item>, ItemsRepository>();
             builder.Services.AddScoped<ICRUDRepository<Customer>, CustomersRepository>();
             builder.Services.AddScoped<AccountsRepository, AccountsRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             var app = builder.Build();
             if (app.Environment.IsDevelopment())

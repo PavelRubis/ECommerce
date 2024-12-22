@@ -3,16 +3,21 @@ using ECommerce.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.Core.Utils;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using ECommerce.DAL.DTOs;
 
 namespace ECommerce.DAL.Repositories
 {
     public class CustomersRepository : ICRUDRepository<Customer>
     {
         private readonly ECommerceDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public CustomersRepository(ECommerceDbContext dbContext)
+        public CustomersRepository(ECommerceDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public async Task<IDTO<Customer>> GetDtoByIdAsync(Guid id)
@@ -20,6 +25,7 @@ namespace ECommerce.DAL.Repositories
             var entity = await _dbContext.Customers
                 .AsNoTracking()
                 .Include(e => e.Account)
+                .ProjectTo<CustomerWebDTO>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(i => i.Id == id);
             if (entity == null)
             {
@@ -33,6 +39,7 @@ namespace ECommerce.DAL.Repositories
             var customers = await _dbContext.Customers
                 .AsNoTracking()
                 .Include(e => e.Account)
+                .ProjectTo<CustomerWebDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
             return new List<IDTO<Customer>>(customers);
         }
@@ -44,15 +51,14 @@ namespace ECommerce.DAL.Repositories
                 .Include(e => e.Account)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
+                .ProjectTo<CustomerWebDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
             return new List<IDTO<Customer>>(customers);
         }
 
         public async Task<Guid> CreateAsync(Customer customer)
         {
-            var customerEntity = new CustomerEntity();
-            customerEntity.SetDataFromObject(customer);
-            var entry = await _dbContext.Customers.AddAsync(customerEntity);
+            var entry = await _dbContext.Customers.AddAsync(_mapper.Map<Customer, CustomerEntity>(customer));
             return entry.Entity.Id;
         }
 
@@ -63,9 +69,8 @@ namespace ECommerce.DAL.Repositories
             {
                 throw new NullReferenceException("Customer not found");
             }
-            entity.SetDataFromObject(customer);
-            _dbContext.Customers.Update(entity);
-            return entity.Id;
+            _dbContext.Customers.Update(_mapper.Map<Customer, CustomerEntity>(customer));
+            return customer.Id;
         }
 
         public async Task DeleteAsync(Guid id)

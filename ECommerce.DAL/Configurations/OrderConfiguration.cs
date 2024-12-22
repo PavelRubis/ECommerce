@@ -18,6 +18,7 @@ namespace ECommerce.DAL.Configurations
                 .HasOne(x => x.Customer)
                 .WithMany(c => c.Orders)
                 .HasForeignKey(x => x.CustomerId);
+            builder.Property(x => x.OrderDate).IsRequired();
             builder.Property(x => x.Status).IsRequired();
         }
     }

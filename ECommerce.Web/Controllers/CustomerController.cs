@@ -1,7 +1,9 @@
-﻿using ECommerce.Core.Aggregates;
+﻿using AutoMapper;
+using ECommerce.Core.Aggregates;
 using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.Core.ServiceInterfaces;
 using ECommerce.Core.Utils;
+using ECommerce.DAL.DTOs;
 using ECommerce.DAL.Models;
 using ECommerce.DAL.UnitOfWork;
 using Microsoft.AspNetCore.Http;
@@ -15,46 +17,51 @@ namespace ECommerce.Web.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CustomerController(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+
+        public CustomerController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         [HttpGet("{id}")]
-        public async Task<IDTO<Customer>> Get(Guid id)
+        public async Task<IActionResult> Get(Guid id)
         {
             var dto = await _unitOfWork.CustomersRepository.GetDtoByIdAsync(id);
-            return dto;
+            return Ok(dto);
         }
 
         [HttpGet("{page}/{pageSize}")]
-        public async Task<List<IDTO<Customer>>> GetByPage(int page, int pageSize)
+        public async Task<IActionResult> GetByPage(int page, int pageSize)
         {
             var dtos = await _unitOfWork.CustomersRepository.GetDtosByPageAsync(page, pageSize);
-            return dtos;
+            return Ok(dtos);
         }
 
         [HttpGet("All")]
-        public async Task<List<IDTO<Customer>>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
             var dtos = await _unitOfWork.CustomersRepository.GetAllDtosAsync();
-            return dtos;
+            return Ok(dtos);
         }
 
         [HttpPost("Create")]
-        public async Task<IActionResult> Create([FromBody] CustomerEntity customerEntity)
+        public async Task<IActionResult> Create([FromBody] CustomerWebDTO customerDto)
         {
             try
             {
-                var id = await _unitOfWork.CustomersRepository.CreateAsync(customerEntity.GetOriginalObject());
-                customerEntity.Account.CustomerId = id;
-                await _unitOfWork.AccountsRepository.CreateAsync(customerEntity.Account);
-                _unitOfWork.Commit();
+                _unitOfWork.BeginTransaction();
+                var customer = _mapper.Map<Customer>(customerDto);
+                var id = await _unitOfWork.CustomersRepository.CreateAsync(customer);
+                customerDto.Account.CustomerId = id;
+                await _unitOfWork.AccountsRepository.CreateAsync(customerDto.Account);
+                _unitOfWork.CommitTransaction();
                 return Ok(id);
             }
             catch (Exception ex)
             {
-                _unitOfWork.Rollback();
+                _unitOfWork.RollbackTransaction();
                 return BadRequest(ex);
             }
             finally
@@ -64,18 +71,21 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpPut("Edit")]
-        public async Task<IActionResult> Edit([FromBody] CustomerEntity customerEntity)
+        public async Task<IActionResult> Edit([FromBody] CustomerWebDTO customerDto)
         {
             try
             {
-                var id = await _unitOfWork.CustomersRepository.EditAsync(customerEntity.GetOriginalObject());
-                await _unitOfWork.AccountsRepository.EditAsync(customerEntity.Account);
-                _unitOfWork.Commit();
+                _unitOfWork.BeginTransaction();
+                var customer = _mapper.Map<Customer>(customerDto);
+                var id = await _unitOfWork.CustomersRepository.EditAsync(customer);
+                customerDto.Account.CustomerId = id;
+                await _unitOfWork.AccountsRepository.EditAsync(customerDto.Account);
+                _unitOfWork.CommitTransaction();
                 return Ok(id);
             }
             catch (Exception ex)
             {
-                _unitOfWork.Rollback();
+                _unitOfWork.RollbackTransaction();
                 return BadRequest(ex);
             }
             finally
@@ -89,12 +99,13 @@ namespace ECommerce.Web.Controllers
         {
             try
             {
+                _unitOfWork.BeginTransaction();
                 await _unitOfWork.CustomersRepository.DeleteAsync(id);
-                _unitOfWork.Commit();
+                _unitOfWork.CommitTransaction();
             }
             catch (Exception ex)
             {
-                _unitOfWork.Rollback();
+                _unitOfWork.RollbackTransaction();
                 return BadRequest(ex);
             }
             finally

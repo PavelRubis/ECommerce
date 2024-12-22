@@ -45,6 +45,22 @@ namespace ECommerce.DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("Accounts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("d1733f2d-825b-4d31-a006-bcd525220da0"),
+                            CustomerId = new Guid("4f36d990-28c9-416b-97f3-7535d1e45422"),
+                            Password = "admin",
+                            Username = "admin"
+                        },
+                        new
+                        {
+                            Id = new Guid("4e9bf998-4aeb-4fa1-8932-685b64e1b97f"),
+                            CustomerId = new Guid("46d04907-697e-4faa-b691-c1c9db2ad9fd"),
+                            Password = "user",
+                            Username = "user"
+                        });
                 });
 
             modelBuilder.Entity("ECommerce.DAL.Models.CustomerEntity", b =>
@@ -71,6 +87,24 @@ namespace ECommerce.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("4f36d990-28c9-416b-97f3-7535d1e45422"),
+                            Address = "",
+                            Code = "0000-2000",
+                            Discount = 99m,
+                            Name = "admin"
+                        },
+                        new
+                        {
+                            Id = new Guid("46d04907-697e-4faa-b691-c1c9db2ad9fd"),
+                            Address = "",
+                            Code = "0000-2025",
+                            Discount = 10m,
+                            Name = "user"
+                        });
                 });
 
             modelBuilder.Entity("ECommerce.DAL.Models.ItemEntity", b =>
@@ -98,6 +132,48 @@ namespace ECommerce.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Items");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("32134814-44e3-4ab6-a4be-1f23ae4d8e5e"),
+                            Category = "Dress",
+                            Code = "20-3333-YY44",
+                            Name = "Платье",
+                            Price = 10000m
+                        },
+                        new
+                        {
+                            Id = new Guid("7193beea-8780-4f95-bce5-b3e7bbdc75fb"),
+                            Category = "Shoes",
+                            Code = "21-3333-YY44",
+                            Name = "Туфли",
+                            Price = 8500m
+                        },
+                        new
+                        {
+                            Id = new Guid("93e3c287-0ce7-4fc0-9269-b50c2ce5998f"),
+                            Category = "Hat",
+                            Code = "22-3333-YY44",
+                            Name = "Кепка",
+                            Price = 1000m
+                        },
+                        new
+                        {
+                            Id = new Guid("8e4c3d92-b535-4e2f-b239-880a3c6709ba"),
+                            Category = "Hat",
+                            Code = "23-3333-YY44",
+                            Name = "Шляпа 'как-раз'",
+                            Price = 7777m
+                        },
+                        new
+                        {
+                            Id = new Guid("476a0bd3-1bf9-46ec-b469-725149e20587"),
+                            Category = "Jeans",
+                            Code = "24-3333-YY44",
+                            Name = "Джинсы",
+                            Price = 2599.99m
+                        });
                 });
 
             modelBuilder.Entity("ECommerce.DAL.Models.OrderEntity", b =>
