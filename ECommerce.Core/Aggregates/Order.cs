@@ -16,6 +16,14 @@ namespace ECommerce.Core.Aggregates
         public OrderStatus Status { get; private set; }
         public List<OrderItem> Items { get; private set; }
 
+        public bool CanBeDeleted
+        { 
+            get
+            {
+                return this.Status?.Value == OrderStatusEnum.New;
+            }
+        }
+
         public Order(Guid customerId, OrderStatus status, List<OrderItem> items, Guid id = default)
         {
             this.Id = id != default ? id : Guid.NewGuid();

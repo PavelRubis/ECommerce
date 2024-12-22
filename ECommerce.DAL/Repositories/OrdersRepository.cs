@@ -77,21 +77,20 @@ namespace ECommerce.DAL.Repositories
             return orderEntry.Entity.Id;
         }
 
-        public async Task<Guid> EditAsync(Order order)
+        public async Task<Guid> ChangeStatusAsync(Guid id, OrderStatus orderStatus)
         {
-            var orderEntity = await _dbContext.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.Id == order.Id);
+            var orderEntity = await _dbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
             if (orderEntity == null)
             {
                 throw new NullReferenceException("Order not found");
             }
-            var orderDto = new OrderWebDTO(order);
-            _dbContext.Orders.Update(_mapper.Map<OrderEntity>(orderDto));
+            orderEntity.SetStatusProps(orderStatus);
             return orderEntity.Id;
         }
 
         public async Task DeleteAsync(Guid id)
         {
-            var orderEntity = await _dbContext.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id);
+            var orderEntity = await _dbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
             if (orderEntity == null)
             {
                 throw new NullReferenceException("Order not found");

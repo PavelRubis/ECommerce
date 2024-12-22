@@ -10,11 +10,12 @@ namespace ECommerce.Core.ValueObjects
     {
         public OrderStatusEnum Value { get; }
 
-        protected static HashSet<OrderStatusEnum> _canBeChangedTo;
+        protected HashSet<OrderStatusEnum> _canBeChangedTo;
 
-        protected OrderStatus(OrderStatusEnum value)
+        protected OrderStatus(OrderStatusEnum value, HashSet<OrderStatusEnum> canBeChangedTo)
         {
             this.Value = value;
+            _canBeChangedTo = canBeChangedTo;
         }
 
         public bool CanBeChangedTo(OrderStatusEnum newValue)
@@ -50,16 +51,8 @@ namespace ECommerce.Core.ValueObjects
         public DateTime OrderDate { get; }
         public long OrderNumber { get; }
 
-        static NewOrderStatus()
-        {
-            _canBeChangedTo = new HashSet<OrderStatusEnum>()
-            {
-                OrderStatusEnum.Shipping,
-            };
-        }
-
         public NewOrderStatus(DateTime orderDate, long orderNumber)
-            : base(OrderStatusEnum.New)
+            : base(OrderStatusEnum.New, new HashSet<OrderStatusEnum>() { OrderStatusEnum.Shipping })
         {
             this.OrderDate = orderDate;
             this.OrderNumber = orderNumber;
@@ -90,16 +83,8 @@ namespace ECommerce.Core.ValueObjects
     {
         public DateTime ShipmentDate { get; }
 
-        static ShippingOrderStatus()
-        {
-            _canBeChangedTo = new HashSet<OrderStatusEnum>()
-            {
-                OrderStatusEnum.Shipped,
-            };
-        }
-
         public ShippingOrderStatus(DateTime shipmentDate)
-            : base(OrderStatusEnum.Shipping)
+            : base(OrderStatusEnum.Shipping, new HashSet<OrderStatusEnum>() { OrderStatusEnum.Shipped })
         {
             this.ShipmentDate = shipmentDate;
         }
@@ -126,13 +111,8 @@ namespace ECommerce.Core.ValueObjects
 
     public class ShippedOrderStatus : OrderStatus
     {
-        static ShippedOrderStatus()
-        {
-            _canBeChangedTo = new HashSet<OrderStatusEnum>();
-        }
-
         public ShippedOrderStatus()
-            : base(OrderStatusEnum.Shipped)
+            : base(OrderStatusEnum.Shipped, new HashSet<OrderStatusEnum>())
         {
         }
 

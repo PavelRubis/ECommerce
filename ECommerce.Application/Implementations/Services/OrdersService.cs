@@ -26,23 +26,25 @@ namespace ECommerce.Application.Implementations.Services
         {
             var orderDto = await _repo.GetDtoByIdAsync(id);
             var order = orderDto.GetOriginalObject();
-            order.ChangeStatusOrFail(new ShippingOrderStatus(shipmentDate));
-            await _repo.EditAsync(order);
+            var newStatus = new ShippingOrderStatus(shipmentDate);
+            order.ChangeStatusOrFail(newStatus);
+            await _repo.ChangeStatusAsync(order.Id, newStatus);
         }
 
         public async Task CompleteAsync(Guid id)
         {
             var orderDto = await _repo.GetDtoByIdAsync(id);
             var order = orderDto.GetOriginalObject();
-            order.ChangeStatusOrFail(new ShippedOrderStatus());
-            await _repo.EditAsync(order);
+            var newStatus = new ShippedOrderStatus();
+            order.ChangeStatusOrFail(newStatus);
+            await _repo.ChangeStatusAsync(order.Id, newStatus);
         }
 
         public async Task DeleteAsync(Guid id)
         {
             var orderDto = await _repo.GetDtoByIdAsync(id);
             var order = orderDto.GetOriginalObject();
-            if (order.Status.Value == OrderStatusEnum.New)
+            if (order.CanBeDeleted)
             {
                 await _repo.DeleteAsync(id);
                 return;

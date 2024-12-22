@@ -20,5 +20,28 @@ namespace ECommerce.DAL.Models
         public long OrderNumber { get; set; }
         public string Status { get; set; }
         public List<OrderItemEntity> OrderItems { get; set; } = new List<OrderItemEntity>();
+
+        public void SetStatusProps(OrderStatus orderStatus)
+        {
+            switch (orderStatus.Value)
+            {
+                case OrderStatusEnum.New:
+                    {
+                        var typedStatus = orderStatus as NewOrderStatus;
+                        this.OrderDate = typedStatus.OrderDate;
+                        this.OrderNumber = typedStatus.OrderNumber;
+                    }
+                    break;
+                case OrderStatusEnum.Shipping:
+                    {
+                        var typedStatus = orderStatus as ShippingOrderStatus;
+                        this.ShipmentDate = typedStatus.ShipmentDate;
+                    }
+                    break;
+                case OrderStatusEnum.Shipped:
+                    break;
+            }
+            this.Status = orderStatus.Value.ToString();
+        }
     }
 }
