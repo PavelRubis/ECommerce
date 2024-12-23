@@ -8,12 +8,15 @@ using ECommerce.DAL.Models;
 using ECommerce.DAL.UnitOfWork;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Web;
 
 namespace ECommerce.Web.Controllers
 {
 
     [Route("api/items")]
     [ApiController]
+    [Authorize(Program.MANAGER_ROLE)]
     public class ItemsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;

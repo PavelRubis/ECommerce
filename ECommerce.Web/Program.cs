@@ -16,6 +16,8 @@ namespace Web
 {
     public class Program
     {
+        public const string MANAGER_ROLE = "Manager";
+        public const string CUSTOMER_ROLE = "Customer";
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);

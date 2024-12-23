@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Web;
 
 namespace ECommerce.Web.Extensions
 {
@@ -39,14 +40,14 @@ namespace ECommerce.Web.Extensions
                 });
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Manager", policy =>
+                options.AddPolicy(Program.MANAGER_ROLE, policy =>
                 {
-                    policy.RequireClaim("Role", "Manager");
+                    policy.RequireClaim("Role", Program.MANAGER_ROLE);
                 });
 
-                options.AddPolicy("Customer", policy =>
+                options.AddPolicy(Program.CUSTOMER_ROLE, policy =>
                 {
-                    policy.RequireClaim("Role", "Customer");
+                    policy.RequireClaim("Role", Program.CUSTOMER_ROLE);
                 });
             });
         }

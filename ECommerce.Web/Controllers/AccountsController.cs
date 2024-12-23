@@ -10,12 +10,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ECommerce.Application.Services;
 using ECommerce.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Web;
 
 namespace ECommerce.Web.Controllers
 {
 
     [Route("api/accounts")]
     [ApiController]
+    [Authorize(Program.MANAGER_ROLE)]
     public class AccountsController : ControllerBase
     {
         private readonly IAccountsService _accountsService;
