@@ -3,3 +3,10 @@ body,
 #app {
     height: 100%;
 }
+
+:root {
+    --error-color: #bb2124;
+    --success-color: #22bb33;
+    --warning-color: #f0ad4e;
+    --info-color: #5bc0de;
+}

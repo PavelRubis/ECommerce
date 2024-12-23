@@ -1,11 +1,16 @@
 ﻿using AutoMapper;
 using ECommerce.Application.Interfaces;
+using ECommerce.Core.Aggregates;
+using ECommerce.DAL.Repositories;
 using ECommerce.DAL.UnitOfWork;
 using ECommerce.Web.DTOs;
 using ECommerce.Web.Infrastructure;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Data;
+using System.Security.Authentication;
 
 namespace ECommerce.Web.Controllers
 {
@@ -13,20 +18,33 @@ namespace ECommerce.Web.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        private readonly IAuthService _authService;
+        private readonly AccountsRepository _accountsRepository;
+        private readonly IPasswordHasher _passwordHasher;
+        private readonly IJwtProvider _jwtProvider;
         private readonly JwtOptions _options;
-        public HomeController(IAuthService authService, IOptions<JwtOptions> options)
+
+        public HomeController(AccountsRepository accountsRepository, IPasswordHasher passwordHasher, IJwtProvider jwtProvider, IOptions<JwtOptions> options)
         {
-            _authService = authService;
+            _accountsRepository = accountsRepository;
+            _passwordHasher = passwordHasher;
+            _jwtProvider = jwtProvider;
             _options = options.Value;
         }
 
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
         {
-            var token = await _authService.LoginAsync(loginDTO.Username, loginDTO.Password);
+            var accDto = await _accountsRepository.GetByUsernameWithPassword(loginDTO.Username);
+            var result = _passwordHasher.Verify(loginDTO.Password, accDto.Password);
+
+            if (!result)
+            {
+                throw new AuthenticationException("Invalid credentials");
+            }
+
+            var token = _jwtProvider.Generate(accDto);
             HttpContext.Response.Cookies.Append(_options.CookieName, token);
-            return Ok();
+            return Ok(new { id = accDto.Id, role = accDto.Role });
         }
     }
 }

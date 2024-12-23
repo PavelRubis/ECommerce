@@ -1,60 +1,69 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import Footer from '@/components/shared/Footer.vue'
+import AuthService from '@/services/AuthService'
+import { useUserStore } from '@/stores/UserStore'
 
 let username = ref('')
-const usernameRules = [
-  (value) => {
-    if (value?.length >= 0) {
-      return true
-    }
-    return 'Field is required.'
-  },
-]
 let password = ref('')
-const passwordRules = [
-  (value) => {
-    if (value?.length >= 0) {
-      return true
-    }
-    return 'Field is required.'
-  },
-]
+let canSubmit = ref(true)
+let authRes = ref(true)
 
-const onClick = () => {
-  alert('hi!')
+const rules = ref({
+  usernameRules: [
+    (value) => {
+      if (value?.length > 0) {
+        return true
+      }
+      return 'Field is required.'
+    },
+  ],
+  passwordRules: [
+    (value) => {
+      if (value?.length > 0) {
+        return true
+      }
+      return 'Field is required.'
+    },
+  ],
+})
+
+onMounted(async () => {})
+
+const onSubmit = async () => {
+  const res = await AuthService.Login(username.value, password.value)
+  authRes.value = res.err === true
+  if (!authRes.value) {
+    useUserStore.setState({ username: username.value, ...res })
+  }
 }
 </script>
 <template>
   <div class="login-form">
-    <h3 class="promo-title">ECommerce - лучший для всех</h3>
+    <h3 v-if="!authRes" class="invalid-creds-text">Invalid credentials</h3>
+    <h3 class="promo-title">Sign in to ECommerce</h3>
     <v-sheet class="sheet" width="500" elevation="4" rounded>
-      <v-form fast-fail @submit.prevent="onClick">
+      <v-form v-model="canSubmit" fast-fail @submit.prevent="onSubmit">
         <v-text-field
-          variant="outlined"
           v-model="username"
-          :rules="usernameRules"
+          :rules="rules.usernameRules"
+          variant="outlined"
           label="username"
-          required
         ></v-text-field>
         <v-text-field
-          variant="outlined"
           v-model="password"
-          :rules="passwordRules"
-          label="password"
+          :rules="rules.passwordRules"
           type="password"
-          required
+          variant="outlined"
+          label="password"
         ></v-text-field>
-        <v-btn variant="outlined" class="mt-2" type="submit" block>Sign in</v-btn>
+        <v-btn variant="outlined" class="mt-2" type="submit" block :disabled="!canSubmit"
+          >Sign in</v-btn
+        >
       </v-form>
     </v-sheet>
   </div>
-  <v-footer border>
-    <v-row justify="center" no-gutters>
-      <v-col class="text-center mt-4" cols="12">
-        {{ new Date().getFullYear() }} — <strong>ECommerce</strong>
-      </v-col>
-    </v-row>
-  </v-footer>
+  <Footer></Footer>
 </template>
 
 <style scoped>
@@ -70,5 +79,8 @@ const onClick = () => {
 }
 .sheet {
   padding: 30px;
+}
+.invalid-creds-text {
+  color: var(--error-color);
 }
 </style>

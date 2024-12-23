@@ -46,7 +46,6 @@ namespace Web
             services.AddScoped<ICRUDRepository<Item>, ItemsRepository>();
             services.AddScoped<ICustomerRepository, CustomersRepository>();
             services.AddScoped<AccountsRepository, AccountsRepository>();
-            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IAccountsService, AccountsService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
