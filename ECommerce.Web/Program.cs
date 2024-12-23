@@ -5,8 +5,12 @@ using ECommerce.DAL;
 using ECommerce.DAL.DTOs;
 using ECommerce.DAL.Repositories;
 using ECommerce.DAL.UnitOfWork;
-using ECommerce.Application.Implementations.Services;
 using Microsoft.EntityFrameworkCore;
+using ECommerce.Application.Services;
+using ECommerce.Application.Interfaces;
+using ECommerce.Web.Infrastructure;
+using Microsoft.AspNetCore.CookiePolicy;
+using ECommerce.Web.Extensions;
 
 namespace Web
 {
@@ -15,26 +19,38 @@ namespace Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var services = builder.Services;
             var config = builder.Configuration;
 
-            builder.Services
+            services.Configure<JwtOptions>(config.GetSection(nameof(JwtOptions)));
+            services.AddJwtAuthentication(config);
+
+            services
                 .AddControllers()
-                .AddNewtonsoftJson(); ;
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddDbContext<ECommerceDbContext>
+                .AddNewtonsoftJson();
+
+            services.AddSwaggerGen();
+            
+            services.AddDbContext<ECommerceDbContext>
             (
                 options =>
                 {
                     options.UseNpgsql(config.GetConnectionString(nameof(ECommerceDbContext)));
                 }
             );
-            builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
-            builder.Services.AddScoped<IOrdersService, OrdersService>();
-            builder.Services.AddScoped<ICRUDRepository<Item>, ItemsRepository>();
-            builder.Services.AddScoped<ICRUDRepository<Customer>, CustomersRepository>();
-            builder.Services.AddScoped<AccountsRepository, AccountsRepository>();
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+            services.AddScoped<IOrdersRepository, OrdersRepository>();
+            services.AddScoped<IOrdersService, OrdersService>();
+            services.AddScoped<ICRUDRepository<Item>, ItemsRepository>();
+            services.AddScoped<ICustomerRepository, CustomersRepository>();
+            services.AddScoped<AccountsRepository, AccountsRepository>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IAccountsService, AccountsService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
+            services.AddScoped<IJwtProvider, JwtProvider>();
+
+            services.AddAutoMapper(typeof(MappingProfile));
 
             var app = builder.Build();
             if (app.Environment.IsDevelopment())
@@ -43,6 +59,16 @@ namespace Web
                 app.UseSwaggerUI();
             }
             app.MapControllers();
+
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = SameSiteMode.Strict,
+                HttpOnly = HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.SameAsRequest,
+            });
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.Run();
         }
     }

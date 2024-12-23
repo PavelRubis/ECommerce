@@ -15,12 +15,20 @@ namespace ECommerce.DAL.DTOs
         public MappingProfile()
         {
             CreateMap<Customer, CustomerEntity>();
-            CreateMap<CustomerEntity, CustomerWebDTO>();
-            CreateMap<Customer, CustomerWebDTO>();
-            CreateMap<CustomerWebDTO, Customer>();
+            CreateMap<CustomerEntity, CustomerOutWebDTO>();
+            CreateMap<Customer, CustomerOutWebDTO>();
+            CreateMap<CustomerOutWebDTO, Customer>();
+            CreateMap<AccountEntity, AccountOutWebDTO>();
+            CreateMap<AccountOutWebDTO, AccountEntity>();
 
-            CreateMap<AccountEntity, AccountWebDTO>();
-            CreateMap<AccountWebDTO, AccountEntity>();
+            CreateMap<Customer, CustomerEntity>();
+            CreateMap<CustomerInWebDTO, CustomerEntity>();
+            CreateMap<CustomerEntity, CustomerInWebDTO>();
+            CreateMap<Customer, CustomerInWebDTO>();
+            CreateMap<CustomerInWebDTO, Customer>();
+            CreateMap<AccountEntity, AccountInWebDTO>();
+            CreateMap<AccountInWebDTO, AccountEntity>();
+
 
             CreateMap<Item, ItemEntity>();
             CreateMap<ItemEntity, ItemWebDTO>();

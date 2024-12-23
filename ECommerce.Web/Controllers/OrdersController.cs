@@ -6,6 +6,7 @@ using ECommerce.DAL.DTOs;
 using ECommerce.DAL.Models;
 using ECommerce.DAL.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,6 +14,7 @@ namespace ECommerce.Web.Controllers
 {
     [Route("api/Orders")]
     [ApiController]
+    [Authorize]
     public class OrdersController : ControllerBase
     {
         private readonly IOrdersService _ordersService;

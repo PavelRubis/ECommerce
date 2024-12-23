@@ -14,18 +14,17 @@ namespace ECommerce.DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Customers",
+                name: "Accounts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false),
-                    Address = table.Column<string>(type: "text", nullable: false),
-                    Discount = table.Column<decimal>(type: "numeric", nullable: true)
+                    Role = table.Column<string>(type: "text", nullable: false),
+                    Username = table.Column<string>(type: "text", nullable: false),
+                    Password = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customers", x => x.Id);
+                    table.PrimaryKey("PK_Accounts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -44,21 +43,23 @@ namespace ECommerce.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Accounts",
+                name: "Customers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Username = table.Column<string>(type: "text", nullable: false),
-                    Password = table.Column<string>(type: "text", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uuid", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Code = table.Column<string>(type: "text", nullable: false),
+                    Address = table.Column<string>(type: "text", nullable: false),
+                    Discount = table.Column<decimal>(type: "numeric", nullable: true),
+                    AccountId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Accounts", x => x.Id);
+                    table.PrimaryKey("PK_Customers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Accounts_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
+                        name: "FK_Customers_Accounts_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -113,12 +114,12 @@ namespace ECommerce.DAL.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Customers",
-                columns: new[] { "Id", "Address", "Code", "Discount", "Name" },
+                table: "Accounts",
+                columns: new[] { "Id", "Password", "Role", "Username" },
                 values: new object[,]
                 {
-                    { new Guid("630bb5d1-2581-4c20-a347-0d65f4e71d74"), "", "0000-2000", 99m, "admin" },
-                    { new Guid("e4921db3-1623-4523-a476-b9f57f2dc901"), "", "0000-2025", 10m, "user" }
+                    { new Guid("1a3694b3-62cb-41a8-9b53-34148839e5f4"), "admin", "Manager", "admin" },
+                    { new Guid("48b8aa04-6f1a-4fbf-84f0-da9b879d3d46"), "user", "Customer", "user" }
                 });
 
             migrationBuilder.InsertData(
@@ -126,26 +127,22 @@ namespace ECommerce.DAL.Migrations
                 columns: new[] { "Id", "Category", "Code", "Name", "Price" },
                 values: new object[,]
                 {
-                    { new Guid("045ababb-fbbc-4400-ba12-f6f740b4a1bc"), "Hat", "23-3333-YY44", "Шляпа 'как-раз'", 7777m },
-                    { new Guid("37f8ca07-7604-4b25-80b2-9acd5cf23217"), "Shoes", "21-3333-YY44", "Туфли", 8500m },
-                    { new Guid("72dcb8b5-477b-4e41-a3f1-70302e097580"), "Hat", "22-3333-YY44", "Кепка", 1000m },
-                    { new Guid("e2bfe397-74f6-4e8f-a14c-3783aa8f15fb"), "Jeans", "24-3333-YY44", "Джинсы", 2599.99m },
-                    { new Guid("ee581365-2d0d-463b-967a-37784642e3f8"), "Dress", "20-3333-YY44", "Платье", 10000m }
+                    { new Guid("1fad878d-6a70-409a-9570-81bbcdac30c8"), "Dress", "20-3333-YY44", "Платье", 10000m },
+                    { new Guid("864c2f2b-10dc-4ac1-898a-03f3869a1a22"), "Hat", "22-3333-YY44", "Кепка", 1000m },
+                    { new Guid("91173937-3192-46bf-be25-70629b473ba3"), "Jeans", "24-3333-YY44", "Джинсы", 2599.99m },
+                    { new Guid("df77b0e7-aded-4181-921b-f12043bd18ba"), "Shoes", "21-3333-YY44", "Туфли", 8500m },
+                    { new Guid("f1003e5a-e5f9-4bd7-b714-08b3b309e40b"), "Hat", "23-3333-YY44", "Шляпа 'как-раз'", 7777m }
                 });
 
             migrationBuilder.InsertData(
-                table: "Accounts",
-                columns: new[] { "Id", "CustomerId", "Password", "Username" },
-                values: new object[,]
-                {
-                    { new Guid("3286fae2-2039-4207-aa40-1b9771b14f50"), new Guid("630bb5d1-2581-4c20-a347-0d65f4e71d74"), "admin", "admin" },
-                    { new Guid("f4a8b864-9442-4641-8294-f21704ab0a73"), new Guid("e4921db3-1623-4523-a476-b9f57f2dc901"), "user", "user" }
-                });
+                table: "Customers",
+                columns: new[] { "Id", "AccountId", "Address", "Code", "Discount", "Name" },
+                values: new object[] { new Guid("0ca4239c-33c7-4436-a22e-0dca4926e436"), new Guid("48b8aa04-6f1a-4fbf-84f0-da9b879d3d46"), "", "0000-2025", 10m, "user" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Accounts_CustomerId",
-                table: "Accounts",
-                column: "CustomerId",
+                name: "IX_Customers_AccountId",
+                table: "Customers",
+                column: "AccountId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -168,9 +165,6 @@ namespace ECommerce.DAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Accounts");
-
-            migrationBuilder.DropTable(
                 name: "OrderItems");
 
             migrationBuilder.DropTable(
@@ -181,6 +175,9 @@ namespace ECommerce.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "Accounts");
         }
     }
 }

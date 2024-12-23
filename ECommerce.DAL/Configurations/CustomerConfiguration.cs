@@ -17,6 +17,10 @@ namespace ECommerce.DAL.Configurations
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.Code).IsRequired();
             builder.Property(x => x.Address).IsRequired();
+            builder.
+                HasOne(c => c.Account)
+                .WithOne(c => c.Customer)
+                .HasForeignKey<CustomerEntity>(c => c.AccountId);
         }
     }
 }

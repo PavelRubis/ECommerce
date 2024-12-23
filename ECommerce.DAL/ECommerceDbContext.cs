@@ -56,37 +56,17 @@ namespace ECommerce.DAL
                     new ItemEntity() { Id = Guid.NewGuid(), Category = "Jeans", Price = 2599.99M, Name = "Джинсы", Code = "24-3333-YY44" }
                 );
 
-            var adminCustomer = new CustomerEntity()
-            {
-                Id = Guid.NewGuid(),
-                Name = "admin",
-                Code = "0000-2000",
-                Discount = 99
-            };
-            var userCustomer = new CustomerEntity()
-            {
-                Id = Guid.NewGuid(),
-                Name = "user",
-                Code = "0000-2025",
-                Discount = 10
-            };
-            modelBuilder.Entity<CustomerEntity>().HasData
-                (
-                    adminCustomer,
-                    userCustomer
-                );
-
             var adminAcc = new AccountEntity()
             {
                 Id = Guid.NewGuid(),
-                CustomerId = adminCustomer.Id,
+                Role = "Manager",
                 Username = "admin",
                 Password = "admin"
             };
             var userAcc = new AccountEntity()
             {
                 Id = Guid.NewGuid(),
-                CustomerId = userCustomer.Id,
+                Role = "Customer",
                 Username = "user",
                 Password = "user"
             };
@@ -94,6 +74,19 @@ namespace ECommerce.DAL
                 (
                     adminAcc,
                     userAcc
+                );
+
+            var userCustomer = new CustomerEntity()
+            {
+                Id = Guid.NewGuid(),
+                Name = "user",
+                Code = "0000-2025",
+                Discount = 10,
+                AccountId = userAcc.Id, 
+            };
+            modelBuilder.Entity<CustomerEntity>().HasData
+                (
+                    userCustomer
                 );
         }
     }

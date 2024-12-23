@@ -11,22 +11,40 @@ using System.Threading.Tasks;
 
 namespace ECommerce.DAL.DTOs
 {
-    public class CustomerWebDTO: IDTO<Customer>
+    public class CustomerOutWebDTO: IDTO<Customer>
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
         public string Address { get; set; } = string.Empty;
         public decimal Discount { get; set; } = decimal.Zero;
-        public AccountWebDTO Account { get; set; }
     }
 
-    public class AccountWebDTO
+    public class AccountOutWebDTO
     {
         public Guid Id { get; set; }
+        public string Role { get; set; }
+        public string Username { get; set; }
+        public CustomerInWebDTO Customer { get; set; }
+    }
+
+    public class AccountInWebDTO
+    {
+        public Guid Id { get; set; }
+        public string Role { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public Guid CustomerId { get; set; }
+        public CustomerInWebDTO Customer { get; set; }
+    }
+
+    public class CustomerInWebDTO
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public string Address { get; set; } = string.Empty;
+        public decimal Discount { get; set; } = decimal.Zero;
+        public Guid AccountId { get; set; }
     }
 
     public class ItemWebDTO : IDTO<Item>

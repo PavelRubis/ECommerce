@@ -16,6 +16,7 @@ namespace ECommerce.DAL.Models
         public string Address { get; set; } = string.Empty;
         public decimal? Discount { get; set; } = decimal.Zero;
         public List<OrderEntity> Orders { get; set; } = new List<OrderEntity>();
+        public Guid AccountId { get; set; }
         public AccountEntity? Account { get; set; }
     }
 }

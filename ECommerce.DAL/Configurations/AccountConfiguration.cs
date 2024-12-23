@@ -14,12 +14,9 @@ namespace ECommerce.DAL.Configurations
         public void Configure(EntityTypeBuilder<AccountEntity> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Role).IsRequired();
             builder.Property(x => x.Username).IsRequired();
             builder.Property(x => x.Password).IsRequired();
-            builder
-                .HasOne(x => x.Customer)
-                .WithOne(c => c.Account)
-                .HasForeignKey<AccountEntity>(x => x.CustomerId);
         }
     }
 }

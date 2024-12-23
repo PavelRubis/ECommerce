@@ -13,7 +13,7 @@ namespace ECommerce.DAL.UnitOfWork
     {
         IOrdersRepository OrdersRepository { get; }
         ICRUDRepository<Item> ItemsRepository { get; }
-        ICRUDRepository<Customer> CustomersRepository { get; }
+        ICustomerRepository CustomersRepository { get; }
         AccountsRepository AccountsRepository { get; }
         void BeginTransaction();
         void CommitTransaction();

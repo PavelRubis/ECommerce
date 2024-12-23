@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ECommerce.DAL.Migrations
 {
     [DbContext(typeof(ECommerceDbContext))]
-    [Migration("20241222204012_inital")]
+    [Migration("20241223035945_inital")]
     partial class inital
     {
         /// <inheritdoc />
@@ -31,10 +31,11 @@ namespace ECommerce.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -44,24 +45,21 @@ namespace ECommerce.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId")
-                        .IsUnique();
-
                     b.ToTable("Accounts");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3286fae2-2039-4207-aa40-1b9771b14f50"),
-                            CustomerId = new Guid("630bb5d1-2581-4c20-a347-0d65f4e71d74"),
+                            Id = new Guid("1a3694b3-62cb-41a8-9b53-34148839e5f4"),
                             Password = "admin",
+                            Role = "Manager",
                             Username = "admin"
                         },
                         new
                         {
-                            Id = new Guid("f4a8b864-9442-4641-8294-f21704ab0a73"),
-                            CustomerId = new Guid("e4921db3-1623-4523-a476-b9f57f2dc901"),
+                            Id = new Guid("48b8aa04-6f1a-4fbf-84f0-da9b879d3d46"),
                             Password = "user",
+                            Role = "Customer",
                             Username = "user"
                         });
                 });
@@ -70,6 +68,9 @@ namespace ECommerce.DAL.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AccountId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Address")
@@ -89,20 +90,16 @@ namespace ECommerce.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AccountId")
+                        .IsUnique();
+
                     b.ToTable("Customers");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("630bb5d1-2581-4c20-a347-0d65f4e71d74"),
-                            Address = "",
-                            Code = "0000-2000",
-                            Discount = 99m,
-                            Name = "admin"
-                        },
-                        new
-                        {
-                            Id = new Guid("e4921db3-1623-4523-a476-b9f57f2dc901"),
+                            Id = new Guid("0ca4239c-33c7-4436-a22e-0dca4926e436"),
+                            AccountId = new Guid("48b8aa04-6f1a-4fbf-84f0-da9b879d3d46"),
                             Address = "",
                             Code = "0000-2025",
                             Discount = 10m,
@@ -139,7 +136,7 @@ namespace ECommerce.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ee581365-2d0d-463b-967a-37784642e3f8"),
+                            Id = new Guid("1fad878d-6a70-409a-9570-81bbcdac30c8"),
                             Category = "Dress",
                             Code = "20-3333-YY44",
                             Name = "Платье",
@@ -147,7 +144,7 @@ namespace ECommerce.DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("37f8ca07-7604-4b25-80b2-9acd5cf23217"),
+                            Id = new Guid("df77b0e7-aded-4181-921b-f12043bd18ba"),
                             Category = "Shoes",
                             Code = "21-3333-YY44",
                             Name = "Туфли",
@@ -155,7 +152,7 @@ namespace ECommerce.DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("72dcb8b5-477b-4e41-a3f1-70302e097580"),
+                            Id = new Guid("864c2f2b-10dc-4ac1-898a-03f3869a1a22"),
                             Category = "Hat",
                             Code = "22-3333-YY44",
                             Name = "Кепка",
@@ -163,7 +160,7 @@ namespace ECommerce.DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("045ababb-fbbc-4400-ba12-f6f740b4a1bc"),
+                            Id = new Guid("f1003e5a-e5f9-4bd7-b714-08b3b309e40b"),
                             Category = "Hat",
                             Code = "23-3333-YY44",
                             Name = "Шляпа 'как-раз'",
@@ -171,7 +168,7 @@ namespace ECommerce.DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("e2bfe397-74f6-4e8f-a14c-3783aa8f15fb"),
+                            Id = new Guid("91173937-3192-46bf-be25-70629b473ba3"),
                             Category = "Jeans",
                             Code = "24-3333-YY44",
                             Name = "Джинсы",
@@ -235,15 +232,15 @@ namespace ECommerce.DAL.Migrations
                     b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("ECommerce.DAL.Models.AccountEntity", b =>
+            modelBuilder.Entity("ECommerce.DAL.Models.CustomerEntity", b =>
                 {
-                    b.HasOne("ECommerce.DAL.Models.CustomerEntity", "Customer")
-                        .WithOne("Account")
-                        .HasForeignKey("ECommerce.DAL.Models.AccountEntity", "CustomerId")
+                    b.HasOne("ECommerce.DAL.Models.AccountEntity", "Account")
+                        .WithOne("Customer")
+                        .HasForeignKey("ECommerce.DAL.Models.CustomerEntity", "AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("ECommerce.DAL.Models.OrderEntity", b =>
@@ -276,10 +273,13 @@ namespace ECommerce.DAL.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("ECommerce.DAL.Models.AccountEntity", b =>
+                {
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("ECommerce.DAL.Models.CustomerEntity", b =>
                 {
-                    b.Navigation("Account");
-
                     b.Navigation("Orders");
                 });
 

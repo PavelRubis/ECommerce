@@ -8,19 +8,23 @@ using ECommerce.DAL.Models;
 using ECommerce.DAL.UnitOfWork;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ECommerce.Application.Services;
+using ECommerce.Application.Interfaces;
 
 namespace ECommerce.Web.Controllers
 {
 
-    [Route("api/customers")]
+    [Route("api/accounts")]
     [ApiController]
-    public class CustomerController : ControllerBase
+    public class AccountsController : ControllerBase
     {
+        private readonly IAccountsService _accountsService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CustomerController(IUnitOfWork unitOfWork, IMapper mapper)
+        public AccountsController(IAccountsService accountsService, IUnitOfWork unitOfWork, IMapper mapper)
         {
+            _accountsService = accountsService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -28,36 +32,40 @@ namespace ECommerce.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var dto = await _unitOfWork.CustomersRepository.GetDtoByIdAsync(id);
+            var dto = await _unitOfWork.AccountsRepository.GetByIdAsync(id);
             return Ok(dto);
         }
 
         [HttpGet("{page}/{pageSize}")]
         public async Task<IActionResult> GetByPage(int page, int pageSize)
         {
-            var dtos = await _unitOfWork.CustomersRepository.GetDtosByPageAsync(page, pageSize);
+            var dtos = await _unitOfWork.AccountsRepository.GetByPageAsync(page, pageSize);
             return Ok(dtos);
         }
 
         [HttpGet("All")]
         public async Task<IActionResult> GetAll()
         {
-            var dtos = await _unitOfWork.CustomersRepository.GetAllDtosAsync();
+            var dtos = await _unitOfWork.AccountsRepository.GetAllAsync();
             return Ok(dtos);
         }
 
         [HttpPost("Create")]
-        public async Task<IActionResult> Create([FromBody] CustomerWebDTO customerDto)
+        public async Task<IActionResult> Create([FromBody] AccountInWebDTO accDto)
         {
             try
             {
                 _unitOfWork.BeginTransaction();
-                var customer = _mapper.Map<Customer>(customerDto);
-                var customerId = await _unitOfWork.CustomersRepository.CreateAsync(customer);
-                customerDto.Account.CustomerId = customerId;
-                var accountId = await _unitOfWork.AccountsRepository.CreateAsync(customerDto.Account);
+                var accountId = await _accountsService.CreateAsync(accDto);
+                var customerId = default(Guid);
+                if (accDto.Customer != null)
+                {
+                    accDto.Customer.AccountId = accountId;
+                    var customer = _mapper.Map<Customer>(accDto.Customer);
+                    customerId = await _unitOfWork.CustomersRepository.CreateAsync(customer);
+                }
                 _unitOfWork.CommitTransaction();
-                return Ok(new { customerId , accountId });
+                return Ok(new { accountId, customerId });
             }
             catch (Exception ex)
             {
@@ -71,17 +79,21 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpPut("Edit")]
-        public async Task<IActionResult> Edit([FromBody] CustomerWebDTO customerDto)
+        public async Task<IActionResult> Edit([FromBody] AccountInWebDTO accDto)
         {
             try
             {
                 _unitOfWork.BeginTransaction();
-                var customer = _mapper.Map<Customer>(customerDto);
-                var customerId = await _unitOfWork.CustomersRepository.EditAsync(customer);
-                customerDto.Account.CustomerId = customerId;
-                var accountId = await _unitOfWork.AccountsRepository.EditAsync(customerDto.Account);
+                var accountId = await _accountsService.EditAsync(accDto);
+                var customerId = default(Guid);
+                if (accDto.Customer != null)
+                {
+                    accDto.Customer.AccountId = accountId;
+                    var customer = _mapper.Map<Customer>(accDto.Customer);
+                    customerId = await _unitOfWork.CustomersRepository.EditAsync(customer);
+                }
                 _unitOfWork.CommitTransaction();
-                return Ok(new { customerId, accountId });
+                return Ok(new { accountId, customerId });
             }
             catch (Exception ex)
             {
@@ -100,7 +112,7 @@ namespace ECommerce.Web.Controllers
             try
             {
                 _unitOfWork.BeginTransaction();
-                await _unitOfWork.CustomersRepository.DeleteAsync(id);
+                await _unitOfWork.AccountsRepository.DeleteAsync(id);
                 _unitOfWork.CommitTransaction();
             }
             catch (Exception ex)

@@ -72,6 +72,7 @@ namespace ECommerce.DAL.Repositories
             var orderDto = new OrderWebDTO(order);
             orderDto.OrderDate = DateTime.UtcNow;
             orderDto.OrderNumber = orderNumber;
+            orderDto.Status = OrderStatusEnum.New.ToString();
 
             var orderEntry = await _dbContext.Orders.AddAsync(_mapper.Map<OrderEntity>(orderDto));
             return orderEntry.Entity.Id;

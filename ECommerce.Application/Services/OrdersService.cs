@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace ECommerce.Application.Implementations.Services
+namespace ECommerce.Application.Services
 {
     public class OrdersService : IOrdersService
     {

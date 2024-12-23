@@ -15,7 +15,7 @@ namespace ECommerce.DAL.UnitOfWork
         private readonly ECommerceDbContext _context;
         private IOrdersRepository _ordersRepository;
         private ICRUDRepository<Item> _itemsRepository;
-        private ICRUDRepository<Customer> _customersRepository;
+        private ICustomerRepository _customersRepository;
         private AccountsRepository _accountsRepository;
         private IMapper _mapper;
 
@@ -35,7 +35,7 @@ namespace ECommerce.DAL.UnitOfWork
             get { return _itemsRepository ??= new ItemsRepository(_context, _mapper); }
         }
 
-        public ICRUDRepository<Customer> CustomersRepository
+        public ICustomerRepository CustomersRepository
         {
             get { return _customersRepository ??= new CustomersRepository(_context, _mapper); }
         }
