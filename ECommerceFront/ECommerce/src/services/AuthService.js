@@ -11,4 +11,14 @@ export default class AuthService {
     }
     return result
   }
+  static async Logout() {
+    let result = { err: false }
+    try {
+      result = await axios.post('api/home/logout')
+    } catch (ex) {
+      console.log(ex)
+      result.err = true
+    }
+    return result
+  }
 }

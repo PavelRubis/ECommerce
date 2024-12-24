@@ -5,12 +5,14 @@ using ECommerce.DAL.Repositories;
 using ECommerce.DAL.UnitOfWork;
 using ECommerce.Web.DTOs;
 using ECommerce.Web.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Data;
 using System.Security.Authentication;
+using Web;
 
 namespace ECommerce.Web.Controllers
 {
@@ -45,6 +47,14 @@ namespace ECommerce.Web.Controllers
             var token = _jwtProvider.Generate(accDto);
             HttpContext.Response.Cookies.Append(_options.CookieName, token);
             return Ok(new { id = accDto.Id, role = accDto.Role });
+        }
+
+        [Authorize]
+        [HttpPost("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            HttpContext.Response.Cookies.Append(_options.CookieName, string.Empty);
+            return Ok();
         }
     }
 }

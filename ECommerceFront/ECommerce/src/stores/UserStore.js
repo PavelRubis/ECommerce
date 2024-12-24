@@ -8,9 +8,6 @@ export const useUserStore = defineStore('user', {
     role: null,
   }),
   getters: {
-    stateGetter: (state) => {
-      return state
-    },
     ordersPermissions: (state) => {
       const uname = state.username
       if (typeof uname === 'string' && uname.length) {
@@ -35,9 +32,10 @@ export const useUserStore = defineStore('user', {
   },
   actions: {
     setState(accountData) {
-      this.id = accountData.id
       this.username = accountData.username
       this.role = accountData.role
+      this.id = accountData.id
     },
   },
+  persist: true,
 })

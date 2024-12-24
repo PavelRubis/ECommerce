@@ -1,14 +1,18 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import Footer from '@/components/shared/Footer.vue'
 import AuthService from '@/services/AuthService'
 import { useUserStore } from '@/stores/UserStore'
 
+const router = useRouter()
 let username = ref('')
 let password = ref('')
+let loading = ref(false)
 let canSubmit = ref(true)
-let authRes = ref(true)
+let errRes = ref(false)
 
+const store = useUserStore()
 const rules = ref({
   usernameRules: [
     (value) => {
@@ -31,16 +35,19 @@ const rules = ref({
 onMounted(async () => {})
 
 const onSubmit = async () => {
+  loading.value = true
   const res = await AuthService.Login(username.value, password.value)
-  authRes.value = res.err === true
-  if (!authRes.value) {
-    useUserStore.setState({ username: username.value, ...res })
+  errRes.value = res.err === true
+  if (errRes.value) {
+    store.setState({ username: username.value, ...res })
+    await router.push('/')
+    loading.value = false
   }
 }
 </script>
 <template>
   <div class="login-form">
-    <h3 v-if="!authRes" class="invalid-creds-text">Invalid credentials</h3>
+    <h3 v-if="errRes" class="invalid-creds-text">Invalid credentials</h3>
     <h3 class="promo-title">Sign in to ECommerce</h3>
     <v-sheet class="sheet" width="500" elevation="4" rounded>
       <v-form v-model="canSubmit" fast-fail @submit.prevent="onSubmit">
@@ -57,7 +64,13 @@ const onSubmit = async () => {
           variant="outlined"
           label="password"
         ></v-text-field>
-        <v-btn variant="outlined" class="mt-2" type="submit" block :disabled="!canSubmit"
+        <v-btn
+          variant="outlined"
+          class="mt-2"
+          type="submit"
+          block
+          :disabled="!canSubmit"
+          :loading="loading"
           >Sign in</v-btn
         >
       </v-form>

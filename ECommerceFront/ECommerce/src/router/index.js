@@ -10,6 +10,7 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
+      meta: { requiresAuth: true },
     },
     {
       path: '/login',
@@ -19,13 +20,11 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to, from, next) => {
-  const userRole = useUserStore?.stateGetter?.role
-  const isUnAuth = typeof userRole !== 'string' || userRole === null
-  if (isUnAuth && to.name !== 'login') {
-    next('/login')
-  } else {
-    next()
+router.beforeEach((to) => {
+  const store = useUserStore()
+  const userRole = store.role
+  if (to.meta.requiresAuth && !userRole) {
+    return '/login'
   }
 })
 
