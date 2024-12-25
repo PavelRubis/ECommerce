@@ -1,7 +1,8 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import Footer from '@/components/shared/Footer.vue'
+import Logo from '@/components/shared/Logo.vue'
 import AuthService from '@/services/AuthService'
 import { useUserStore } from '@/stores/UserStore'
 
@@ -13,7 +14,7 @@ let canSubmit = ref(true)
 let errRes = ref(false)
 
 const store = useUserStore()
-const rules = ref({
+const rules = reactive({
   usernameRules: [
     (value) => {
       if (value?.length > 0) {
@@ -32,14 +33,16 @@ const rules = ref({
   ],
 })
 
-onMounted(async () => {})
+onMounted(async () => {
+  // TODO: check whether firt acc need to be created.
+})
 
 const onSubmit = async () => {
   loading.value = true
   const res = await AuthService.Login(username.value, password.value)
   errRes.value = res.err === true
-  if (errRes.value) {
-    store.setState({ username: username.value, ...res })
+  if (!errRes.value) {
+    store.setState({ username: username.value, ...res.data })
     await router.push('/')
     loading.value = false
   }
@@ -47,6 +50,7 @@ const onSubmit = async () => {
 </script>
 <template>
   <div class="login-form">
+    <Logo></Logo>
     <h3 v-if="errRes" class="invalid-creds-text">Invalid credentials</h3>
     <h3 class="promo-title">Sign in to ECommerce</h3>
     <v-sheet class="sheet" width="500" elevation="4" rounded>

@@ -1,20 +1,29 @@
 <script setup>
+import { ContentSections } from '@/meta'
+import { ref } from 'vue'
 import Footer from '@/components/shared/Footer.vue'
 import Header from '@/components/Header.vue'
+import HomeContent from '@/components/HomeContent.vue'
+
+const currentSection = ref(ContentSections.ITEMS)
+const changeSectionRequested = (sectionName) => {
+  currentSection.value = sectionName
+  console.log(currentSection.value)
+}
 </script>
+
 <template>
-  <div class="layout">
-    <Header></Header>
-    <div class="layout"></div>
+  <div class="home-layout">
+    <Header @changeSectionRequested="changeSectionRequested"></Header>
+    <HomeContent :section="currentSection"></HomeContent>
     <Footer></Footer>
   </div>
 </template>
+
 <style scoped>
-.layout {
+.home-layout {
   height: 100%;
-}
-.divider {
-  margin-right: 10px;
-  border-color: var(--text-color);
+  padding-right: 10px;
+  padding-left: 10px;
 }
 </style>

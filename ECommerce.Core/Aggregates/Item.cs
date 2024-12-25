@@ -60,7 +60,7 @@ namespace ECommerce.Core.Aggregates
 
     public enum ItemCategory
     {
-        Undefined,
+        Other,
         Shirt,
         TShirt,
         Sweater,

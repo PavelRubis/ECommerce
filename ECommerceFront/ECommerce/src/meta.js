@@ -41,4 +41,31 @@ export const Permissions = {
   },
 }
 
-export default { Roles, Permissions }
+export const ContentSections = {
+  ITEMS: 'items',
+  ORDERS: 'orders',
+  CUSTOMERS: 'customers',
+}
+
+export const ItemsDefaults = {
+  CATEGORY: {
+    OTHER: 'Other',
+    SHIRT: 'Shirt',
+    T_SHIRT: 'TShirt',
+    SWEATER: 'Sweater',
+    JACKET: 'Jacket',
+    JEANS: 'Jeans',
+    SHORTS: 'Shorts',
+    DRESS: 'Dress',
+    SCARF: 'Scarf',
+    HAT: 'Hat',
+    SHOES: 'Shoes',
+  },
+  ID: '00000000-0000-0000-0000-000000000000',
+}
+
+export const VuetifyDefaults = {
+  UI_VARIANT: 'outlined',
+}
+
+export default { Roles, Permissions, ContentSections, ItemsDefaults, VuetifyDefaults }

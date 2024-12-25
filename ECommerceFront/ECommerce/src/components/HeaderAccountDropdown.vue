@@ -59,7 +59,6 @@ const onMenuBtnClick = (index) => {
 <style scoped>
 .btn {
   height: 100%;
-  margin-right: 10px;
   font-weight: bold;
   border-color: var(--text-color);
 }

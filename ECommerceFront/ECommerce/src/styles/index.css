@@ -12,3 +12,10 @@ body,
     --app-color: #ffff;
     --text-color: #0d061c;
 }
+
+.v-alert {
+    position: fixed;
+    left: 56.4%;
+    bottom: 10px;
+    z-index: 2;
+}

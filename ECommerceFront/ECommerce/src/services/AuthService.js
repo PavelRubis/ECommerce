@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export default class AuthService {
   static async Login(username, password) {
-    let result = { err: false }
+    let result = null
     try {
       result = await axios.post('api/home/login', { username, password })
     } catch (ex) {
@@ -12,7 +12,7 @@ export default class AuthService {
     return result
   }
   static async Logout() {
-    let result = { err: false }
+    let result = null
     try {
       result = await axios.post('api/home/logout')
     } catch (ex) {
