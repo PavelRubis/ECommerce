@@ -15,11 +15,11 @@
           ></ItemDeletionDialog>
         </v-toolbar>
       </template>
-      <template v-slot:[`account.actions`]="{ account }">
-        <v-icon class="edit-icon" @click="openEditionDialog(account)">
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-icon class="edit-icon" @click="openEditionDialog(item)">
           fa-regular fa-pen-to-square
         </v-icon>
-        <v-icon @click="openDeletionDialog(account)"> fa-regular fa-trash-can </v-icon>
+        <v-icon @click="openDeletionDialog(item)"> fa-regular fa-trash-can </v-icon>
       </template>
     </v-data-table>
   </div>

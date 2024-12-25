@@ -88,7 +88,7 @@ namespace ECommerce.DAL.Repositories
             {
                 throw new NullReferenceException("Customer not found");
             }
-            entity = _mapper.Map<AccountEntity>(account);
+            _dbContext.Accounts.Update(_mapper.Map<AccountEntity>(account));
             return account.Id;
         }
 
