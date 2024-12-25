@@ -64,7 +64,7 @@ import { ItemsDefaults, VuetifyDefaults } from '@/meta'
 
 const dialog = ref(false)
 const title = ref('New Item')
-const editedItem = reactive({
+let editedItem = reactive({
   id: ItemsDefaults.ID,
   category: ItemsDefaults.CATEGORY.OTHER,
   code: '',
@@ -82,12 +82,7 @@ function openItemCreationDialog() {
   dialog.value = true
 }
 const openItemEditionDialog = (item) => {
-  editedItem.id = item.id
-  editedItem.category = item.category
-  editedItem.code = item.code
-  editedItem.name = item.name
-  editedItem.price = item.price
-  title.value = 'Edit Item'
+  editedItem = item
   dialog.value = true
 }
 

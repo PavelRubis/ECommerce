@@ -64,6 +64,14 @@ export const ItemsDefaults = {
   ID: '00000000-0000-0000-0000-000000000000',
 }
 
+export const AccountsDefaults = {
+  ROLE: {
+    CUSTOMER: 'Customer',
+    MANAGER: 'Manager',
+  },
+  ID: '00000000-0000-0000-0000-000000000000',
+}
+
 export const VuetifyDefaults = {
   UI_VARIANT: 'outlined',
 }

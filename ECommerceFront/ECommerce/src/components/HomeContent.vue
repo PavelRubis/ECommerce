@@ -4,6 +4,7 @@
   </v-container>
   <div class="content">
     <ItemsSection v-if="props.section === ContentSections.ITEMS"></ItemsSection>
+    <AccountsSection v-if="props.section === ContentSections.CUSTOMERS"></AccountsSection>
   </div>
   <v-alert
     v-model:="alertConfig.visible"
@@ -19,6 +20,7 @@
 import { ContentSections } from '@/meta'
 import { reactive, provide, ref } from 'vue'
 import ItemsSection from '@/components/ItemsSection.vue'
+import AccountsSection from '@/components/AccountsSection.vue'
 const props = defineProps(['section'])
 
 const loaderValue = ref(false)
