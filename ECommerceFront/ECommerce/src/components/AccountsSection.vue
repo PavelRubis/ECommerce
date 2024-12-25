@@ -9,10 +9,10 @@
             @onCreationRequested="openCreationDialog"
             ref="editDialog"
           ></AccountEditionDialog>
-          <ItemDeletionDialog
-            @onDeletionSubmited="deleteAccount"
+          <CommandDialog
+            @onOperationSubmited="deleteAccount"
             ref="deleteDialog"
-          ></ItemDeletionDialog>
+          ></CommandDialog>
         </v-toolbar>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
@@ -31,7 +31,7 @@ const showAlert = inject('showAlert')
 const showLoader = inject('showLoader')
 import RequestsService from '@/services/RequestsService'
 import AccountEditionDialog from '@/components/AccountEditionDialog.vue'
-import ItemDeletionDialog from '@/components/ItemDeletionDialog.vue'
+import CommandDialog from '@/components/shared/CommandDialog.vue'
 const editDialog = ref(null)
 const deleteDialog = ref(null)
 
@@ -42,7 +42,7 @@ const openEditionDialog = (account) => {
   editDialog.value.openAccountEditionDialog(account)
 }
 const openDeletionDialog = (account) => {
-  deleteDialog.value.openItemDeletionDialog(account)
+  deleteDialog.value.openItemOperationDialog(account)
 }
 
 const createAccount = async (account) => {

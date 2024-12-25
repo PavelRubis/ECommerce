@@ -47,6 +47,22 @@ namespace ECommerce.DAL.Repositories
             return orderDto;
         }
 
+        public async Task<List<IOrderDTO>> GetDtosAsync(bool withItems = false)
+        {
+
+            var ordersQuery = _dbContext.Orders.AsNoTracking();
+            if (withItems)
+            {
+                ordersQuery = ordersQuery.Include(o => o.OrderItems);
+            }
+
+            var orderDtos = await ordersQuery
+                .ProjectTo<OrderWebDTO>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return new List<IOrderDTO>(orderDtos);
+        }
+
         public async Task<List<IOrderDTO>> GetDtosByStatusAsync(string starusStr, int page, int pageSize, bool withItems = false)
         {
             var ordersQuery = _dbContext.Orders.AsNoTracking();

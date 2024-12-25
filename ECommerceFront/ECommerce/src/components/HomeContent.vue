@@ -5,6 +5,7 @@
   <div class="content">
     <ItemsSection v-if="props.section === ContentSections.ITEMS"></ItemsSection>
     <AccountsSection v-if="props.section === ContentSections.CUSTOMERS"></AccountsSection>
+    <OrdersSection v-if="props.section === ContentSections.ORDERS"></OrdersSection>
   </div>
   <v-alert
     v-model:="alertConfig.visible"
@@ -21,6 +22,7 @@ import { ContentSections } from '@/meta'
 import { reactive, provide, ref } from 'vue'
 import ItemsSection from '@/components/ItemsSection.vue'
 import AccountsSection from '@/components/AccountsSection.vue'
+import OrdersSection from '@/components/OrdersSection.vue'
 const props = defineProps(['section'])
 
 const loaderValue = ref(false)

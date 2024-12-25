@@ -118,8 +118,8 @@ namespace ECommerce.DAL.Migrations
                 columns: new[] { "Id", "Password", "Role", "Username" },
                 values: new object[,]
                 {
-                    { new Guid("1a3694b3-62cb-41a8-9b53-34148839e5f4"), "admin", "Manager", "admin" },
-                    { new Guid("48b8aa04-6f1a-4fbf-84f0-da9b879d3d46"), "user", "Customer", "user" }
+                    { new Guid("0fb788ff-51db-4038-a605-f48584829221"), "user", "Customer", "user" },
+                    { new Guid("3a4a6d48-9095-4ac7-b72a-cbc90d6dadf9"), "admin", "Manager", "admin" }
                 });
 
             migrationBuilder.InsertData(
@@ -127,17 +127,17 @@ namespace ECommerce.DAL.Migrations
                 columns: new[] { "Id", "Category", "Code", "Name", "Price" },
                 values: new object[,]
                 {
-                    { new Guid("1fad878d-6a70-409a-9570-81bbcdac30c8"), "Dress", "20-3333-YY44", "Платье", 10000m },
-                    { new Guid("864c2f2b-10dc-4ac1-898a-03f3869a1a22"), "Hat", "22-3333-YY44", "Кепка", 1000m },
-                    { new Guid("91173937-3192-46bf-be25-70629b473ba3"), "Jeans", "24-3333-YY44", "Джинсы", 2599.99m },
-                    { new Guid("df77b0e7-aded-4181-921b-f12043bd18ba"), "Shoes", "21-3333-YY44", "Туфли", 8500m },
-                    { new Guid("f1003e5a-e5f9-4bd7-b714-08b3b309e40b"), "Hat", "23-3333-YY44", "Шляпа 'как-раз'", 7777m }
+                    { new Guid("11ebdd66-4227-4ae6-9fc4-ce7c33574f71"), "Dress", "20-3333-YY44", "Платье", 10000m },
+                    { new Guid("4d434bb8-705a-471a-ae93-fe1563b1697d"), "Hat", "22-3333-YY44", "Кепка", 1000m },
+                    { new Guid("64838aa8-af73-43dd-be2e-cc67acbd5d07"), "Jeans", "24-3333-YY44", "Джинсы", 2599.99m },
+                    { new Guid("8fbd7cb0-56fd-4f70-86d9-461fa7720185"), "Hat", "23-3333-YY44", "Шляпа 'как-раз'", 7777m },
+                    { new Guid("b749c4d8-756c-468c-8112-d7d230a7b417"), "Shoes", "21-3333-YY44", "Туфли", 8500m }
                 });
 
             migrationBuilder.InsertData(
                 table: "Customers",
                 columns: new[] { "Id", "AccountId", "Address", "Code", "Discount", "Name" },
-                values: new object[] { new Guid("0ca4239c-33c7-4436-a22e-0dca4926e436"), new Guid("48b8aa04-6f1a-4fbf-84f0-da9b879d3d46"), "", "0000-2025", 10m, "user" });
+                values: new object[] { new Guid("91a8c3b5-772a-4813-bef9-d68b23951aa3"), new Guid("0fb788ff-51db-4038-a605-f48584829221"), "", "0000-2025", 10m, "user" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Customers_AccountId",

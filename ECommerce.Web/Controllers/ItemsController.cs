@@ -16,7 +16,7 @@ namespace ECommerce.Web.Controllers
 
     [Route("api/items")]
     [ApiController]
-    [Authorize(Program.MANAGER_ROLE)]
+    //[Authorize(Program.MANAGER_ROLE)]
     public class ItemsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;

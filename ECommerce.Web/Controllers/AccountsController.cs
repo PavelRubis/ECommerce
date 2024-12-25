@@ -18,7 +18,7 @@ namespace ECommerce.Web.Controllers
 
     [Route("api/accounts")]
     [ApiController]
-    [Authorize(Program.MANAGER_ROLE)]
+    //[Authorize(Program.MANAGER_ROLE)]
     public class AccountsController : ControllerBase
     {
         private readonly IAccountsService _accountsService;

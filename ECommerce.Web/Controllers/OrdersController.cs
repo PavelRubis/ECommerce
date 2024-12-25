@@ -25,7 +25,8 @@ namespace ECommerce.Web.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [Authorize(Program.CUSTOMER_ROLE)]
+        //[Authorize(Program.MANAGER_ROLE)]
+        //[Authorize(Program.CUSTOMER_ROLE)]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
@@ -33,16 +34,26 @@ namespace ECommerce.Web.Controllers
             return Ok(orderDTO);
         }
 
-        [Authorize(Program.CUSTOMER_ROLE)]
+        //[Authorize(Program.MANAGER_ROLE)]
+        //[Authorize(Program.CUSTOMER_ROLE)]
+        [HttpGet("All")]
+        public async Task<IActionResult> GetDtosAsync(bool withItems = false)
+        {
+            var dtos = await _unitOfWork.OrdersRepository.GetDtosAsync(withItems);
+            return Ok(dtos);
+        }
+
+        //[Authorize(Program.MANAGER_ROLE)]
+        //[Authorize(Program.CUSTOMER_ROLE)]
         [HttpGet("{statusStr}/{page}/{pageSize}/{withItems}")]
-        public async Task<IActionResult> GetbyStatusAsync(string statusStr, int page, int pageSize, bool withItems = false)
+        public async Task<IActionResult> GetDtosByStatusAsync(string statusStr, int page, int pageSize, bool withItems = false)
         {
             var dtos = await _unitOfWork.OrdersRepository.GetDtosByStatusAsync(statusStr, page, pageSize, withItems);
             return Ok(dtos);
         }
 
+        //[Authorize(Program.CUSTOMER_ROLE)]
         [HttpPost("Create")]
-        [Authorize(Program.CUSTOMER_ROLE)]
         public async Task<IActionResult> Create([FromBody] OrderWebDTO orderDto)
         {
             try
@@ -63,8 +74,8 @@ namespace ECommerce.Web.Controllers
             }
         }
 
+        //[Authorize(Program.MANAGER_ROLE)]
         [HttpPut("SubmitShipping/{id}")]
-        [Authorize(Program.MANAGER_ROLE)]
         public async Task<IActionResult> SubmitShipping(Guid id)
         {
             try
@@ -85,8 +96,8 @@ namespace ECommerce.Web.Controllers
             return Ok();
         }
 
+        //[Authorize(Program.MANAGER_ROLE)]
         [HttpPut("Complete/{id}")]
-        [Authorize(Program.MANAGER_ROLE)]
         public async Task<IActionResult> Complete(Guid id)
         {
             try
@@ -107,8 +118,8 @@ namespace ECommerce.Web.Controllers
             return Ok();
         }
 
+        //[Authorize(Program.CUSTOMER_ROLE)]
         [HttpDelete("Delete/{id}")]
-        [Authorize(Program.CUSTOMER_ROLE)]
         public async Task<IActionResult> Delete(Guid id)
         {
             try
