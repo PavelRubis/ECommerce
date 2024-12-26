@@ -61,14 +61,14 @@ namespace ECommerce.DAL
                 Id = Guid.NewGuid(),
                 Role = "Manager",
                 Username = "admin",
-                Password = "admin"
+                Password = BCrypt.Net.BCrypt.EnhancedHashPassword("admin")
             };
             var userAcc = new AccountEntity()
             {
                 Id = Guid.NewGuid(),
                 Role = "Customer",
                 Username = "user",
-                Password = "user"
+                Password = BCrypt.Net.BCrypt.EnhancedHashPassword("user")
             };
             modelBuilder.Entity<AccountEntity>().HasData
                 (
@@ -76,6 +76,14 @@ namespace ECommerce.DAL
                     userAcc
                 );
 
+            var adminCustomer = new CustomerEntity()
+            {
+                Id = Guid.NewGuid(),
+                Name = "admin",
+                Code = "0000-2024",
+                Discount = 50,
+                AccountId = adminAcc.Id,
+            };
             var userCustomer = new CustomerEntity()
             {
                 Id = Guid.NewGuid(),
@@ -86,7 +94,8 @@ namespace ECommerce.DAL
             };
             modelBuilder.Entity<CustomerEntity>().HasData
                 (
-                    userCustomer
+                    userCustomer,
+                    adminCustomer
                 );
         }
     }

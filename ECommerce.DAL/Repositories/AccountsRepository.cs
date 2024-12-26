@@ -29,6 +29,8 @@ namespace ECommerce.DAL.Repositories
         {
             var entity = await _dbContext.Accounts
                 .AsNoTracking()
+                .Include(a => a.Customer)
+                .ProjectTo<AccountInWebDTO>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(i => i.Username == username);
             if (entity == null)
             {

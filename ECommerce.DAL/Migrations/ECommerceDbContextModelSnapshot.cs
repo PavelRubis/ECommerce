@@ -47,15 +47,15 @@ namespace ECommerce.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3a4a6d48-9095-4ac7-b72a-cbc90d6dadf9"),
-                            Password = "admin",
+                            Id = new Guid("6fdb4232-5066-446d-9879-d9e9ca3a53cc"),
+                            Password = "$2a$11$i2d9t6FHgYefHUv6mvUY6ulzeDTchq/Ut5dPAJ/qFjJPH0sFIPuBa",
                             Role = "Manager",
                             Username = "admin"
                         },
                         new
                         {
-                            Id = new Guid("0fb788ff-51db-4038-a605-f48584829221"),
-                            Password = "user",
+                            Id = new Guid("9f17b751-ddcc-4377-952a-1c8e4f3639f3"),
+                            Password = "$2a$11$jvpIppTM1j3viV2a8R2.3ufjxM4mLQJRKD5dx3J7HGXBXoItMJLPy",
                             Role = "Customer",
                             Username = "user"
                         });
@@ -95,12 +95,21 @@ namespace ECommerce.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("91a8c3b5-772a-4813-bef9-d68b23951aa3"),
-                            AccountId = new Guid("0fb788ff-51db-4038-a605-f48584829221"),
+                            Id = new Guid("b695a7b6-5322-453e-b523-f72bad68c94b"),
+                            AccountId = new Guid("9f17b751-ddcc-4377-952a-1c8e4f3639f3"),
                             Address = "",
                             Code = "0000-2025",
                             Discount = 10m,
                             Name = "user"
+                        },
+                        new
+                        {
+                            Id = new Guid("4973ddd9-bd2b-44cf-a2fc-59e6263447ec"),
+                            AccountId = new Guid("6fdb4232-5066-446d-9879-d9e9ca3a53cc"),
+                            Address = "",
+                            Code = "0000-2024",
+                            Discount = 50m,
+                            Name = "admin"
                         });
                 });
 
@@ -133,7 +142,7 @@ namespace ECommerce.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("11ebdd66-4227-4ae6-9fc4-ce7c33574f71"),
+                            Id = new Guid("25693cbd-69a2-46be-b5a0-3041846cc5df"),
                             Category = "Dress",
                             Code = "20-3333-YY44",
                             Name = "Платье",
@@ -141,7 +150,7 @@ namespace ECommerce.DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("b749c4d8-756c-468c-8112-d7d230a7b417"),
+                            Id = new Guid("768e1be4-4325-4470-b3ca-77c480c89bc7"),
                             Category = "Shoes",
                             Code = "21-3333-YY44",
                             Name = "Туфли",
@@ -149,7 +158,7 @@ namespace ECommerce.DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("4d434bb8-705a-471a-ae93-fe1563b1697d"),
+                            Id = new Guid("455f706d-c597-48fd-95f9-45b909e3b5ec"),
                             Category = "Hat",
                             Code = "22-3333-YY44",
                             Name = "Кепка",
@@ -157,7 +166,7 @@ namespace ECommerce.DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("8fbd7cb0-56fd-4f70-86d9-461fa7720185"),
+                            Id = new Guid("8c494754-817a-4039-aedb-0472c08745c2"),
                             Category = "Hat",
                             Code = "23-3333-YY44",
                             Name = "Шляпа 'как-раз'",
@@ -165,7 +174,7 @@ namespace ECommerce.DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("64838aa8-af73-43dd-be2e-cc67acbd5d07"),
+                            Id = new Guid("fb5925a9-67ef-424c-b60c-98ac36924f6a"),
                             Category = "Jeans",
                             Code = "24-3333-YY44",
                             Name = "Джинсы",
