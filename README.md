@@ -11,6 +11,6 @@ For backend:
 2. Debug ECommerce.sln in VS 2022
 
 For frontend:
-cd ./ECommerce/ECommerceFront/ECommerce
-`npm i`
-`npm run dev`
+1.  `cd ./ECommerce/ECommerceFront/ECommerce`
+2.  `npm i`
+3.   `npm run dev`
