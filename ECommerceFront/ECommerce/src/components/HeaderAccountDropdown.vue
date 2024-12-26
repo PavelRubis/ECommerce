@@ -19,7 +19,6 @@ const onMenuBtnClick = (index) => {
       break
     case 1:
       AuthService.Logout().finally(() => {
-        store.setState({})
         router.push('/login')
       })
       break

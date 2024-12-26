@@ -72,8 +72,19 @@ export const AccountsDefaults = {
   ID: '00000000-0000-0000-0000-000000000000',
 }
 
+export const OrderItemsDefaults = {
+  ID: '00000000-0000-0000-0000-000000000000',
+}
+
 export const VuetifyDefaults = {
   UI_VARIANT: 'outlined',
 }
 
-export default { Roles, Permissions, ContentSections, ItemsDefaults, VuetifyDefaults }
+export default {
+  Roles,
+  Permissions,
+  ContentSections,
+  ItemsDefaults,
+  OrderItemsDefaults,
+  VuetifyDefaults,
+}

@@ -9,14 +9,29 @@
             @onCreationRequested="openCreationDialog"
             ref="editDialog"
           ></ItemEditionDialog>
-          <CommandDialog
-            @onOperationSubmited="deleteItem"
-            ref="deleteDialog"
-          ></CommandDialog>
+          <CommandDialog @onOperationSubmited="deleteItem" ref="deleteDialog"></CommandDialog>
         </v-toolbar>
       </template>
+      <template v-slot:[`item.cart`]="{ item }">
+        <div class="cart-adder">
+          <v-icon
+            v-show="cartItems[item.id]?.itemsCount > 0"
+            class="action-icon"
+            @click="decrementItemQuantityInCart(item)"
+          >
+            fa-solid fa-minus
+          </v-icon>
+          <v-chip class="cart-adder-counter" v-show="cartItems[item.id]?.itemsCount > 0">
+            {{ cartItems[item.id]?.itemsCount ?? '' }}
+          </v-chip>
+          <v-icon class="action-icon" @click="incrementItemQuantityInCart(item)">
+            fa-solid fa-plus
+          </v-icon>
+          <v-icon @click="removeItemFromCart(item)"> fa-solid cross </v-icon>
+        </div>
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon class="edit-icon" @click="openEditionDialog(item)">
+        <v-icon class="action-icon" @click="openEditionDialog(item)">
           fa-regular fa-pen-to-square
         </v-icon>
         <v-icon @click="openDeletionDialog(item)"> fa-regular fa-trash-can </v-icon>
@@ -27,11 +42,12 @@
 
 <script setup>
 import { reactive, ref, inject, onMounted } from 'vue'
-const showAlert = inject('showAlert')
-const showLoader = inject('showLoader')
 import RequestsService from '@/services/RequestsService'
 import ItemEditionDialog from '@/components/ItemEditionDialog.vue'
 import CommandDialog from '@/components/shared/CommandDialog.vue'
+import { useUserStore } from '@/stores/UserStore'
+const showAlert = inject('showAlert')
+const showLoader = inject('showLoader')
 const editDialog = ref(null)
 const deleteDialog = ref(null)
 
@@ -81,6 +97,30 @@ const deleteItem = async (item) => {
   }
 }
 
+const store = useUserStore()
+let cartItems = reactive({})
+
+const initCartItems = () => {
+  if (typeof store.cart === 'object' && store.cart !== null) {
+    cartItems = store.cart
+  }
+}
+initCartItems()
+
+const incrementItemQuantityInCart = (item) => {
+  if (store.incrementItemQuantityInCart(item, item.id)) {
+    cartItems[item.id] = store.cart[item.id]
+  }
+}
+const decrementItemQuantityInCart = (item) => {
+  if (store.decrementItemQuantityInCart(item.id)) {
+    cartItems[item.id] = store.cart[item.id]
+  }
+}
+const removeItemFromCart = (item) => {
+  store.removeItemFromCart(item.id)
+}
+
 const headers = [
   {
     title: 'Name',
@@ -106,7 +146,8 @@ const headers = [
     sortable: false,
     key: 'code',
   },
-  { title: 'Actions', key: 'actions', sortable: false },
+  { title: 'Add to cart', key: 'cart', sortable: false },
+  { title: 'Edit or delete', key: 'actions', sortable: false },
 ]
 
 const items = reactive({})
@@ -134,6 +175,14 @@ onMounted(async () => {
   border-bottom-width: medium;
 }
 .edit-icon {
+}
+.cart-adder {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.action-icon,
+.cart-adder-counter {
   margin-right: 10px;
 }
 </style>

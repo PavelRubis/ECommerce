@@ -1,7 +1,7 @@
 <template>
-  <v-dialog v-model="dialog" max-width="600px">
+  <v-dialog max-width="600px">
     <v-card>
-      <v-card-title style="text-align: center;">{{ props.title }}</v-card-title>
+      <v-card-title style="text-align: center">{{ props.title }}</v-card-title>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn :variant="VuetifyDefaults.UI_VARIANT" @click="onOperationCanceled">Cancel</v-btn>

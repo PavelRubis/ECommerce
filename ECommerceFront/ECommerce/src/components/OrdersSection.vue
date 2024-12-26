@@ -23,15 +23,18 @@
           ></CommandDialog>
         </v-toolbar>
       </template>
+      <template v-slot:[`item.info`]="{ item }">
+        <v-icon class="action-icon" @click="openDeletionDialog(item)"> fa-solid fa-list </v-icon>
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon class="action-icon" @click="openDeletionDialog(item)">
-          fa-regular fa-trash-can
-        </v-icon>
         <v-icon class="action-icon" @click="openSubmitionDialog(item)">
           fa-regular fa-thumbs-up
         </v-icon>
         <v-icon class="action-icon" @click="openCompletionDialog(item)">
           fa-solid fa-circle-check
+        </v-icon>
+        <v-icon class="action-icon" @click="openDeletionDialog(item)">
+          fa-regular fa-trash-can
         </v-icon>
 
         <!-- <v-icon v-if="store.role === Roles.MANAGER_ROLE" @click="openSubmitionDialog(item)">
@@ -111,7 +114,7 @@ const headers = [
     title: 'Number',
     align: 'start',
     sortable: true,
-    key: 'role',
+    key: 'orderNumber',
   },
   {
     title: 'Creation date',

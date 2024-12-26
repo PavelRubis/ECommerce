@@ -1,6 +1,7 @@
 <script setup>
 import HeaderSectionsButtons from '@/components/HeaderSectionsButtons.vue'
 import HeaderAccountDropdown from '@/components/HeaderAccountDropdown.vue'
+import HeaderCartDialog from '@/components/HeaderCartDialog.vue'
 import Logo from '@/components/shared/Logo.vue'
 
 const emit = defineEmits(['changeSectionRequested'])
@@ -16,6 +17,7 @@ const changeSectionRequested = (sectionName) => {
     <HeaderSectionsButtons @changeSectionRequested="changeSectionRequested"></HeaderSectionsButtons>
     <v-spacer></v-spacer>
     <v-divider class="divider" vertical></v-divider>
+    <HeaderCartDialog></HeaderCartDialog>
     <HeaderAccountDropdown></HeaderAccountDropdown>
   </div>
 </template>

@@ -46,7 +46,7 @@ namespace ECommerce.Web.Controllers
 
             var token = _jwtProvider.Generate(accDto);
             HttpContext.Response.Cookies.Append(_options.CookieName, token);
-            return Ok(new { id = accDto.Id, role = accDto.Role });
+            return Ok(new { id = accDto.Id, customerId = accDto.Customer.Id, role = accDto.Role });
         }
 
         [Authorize]
