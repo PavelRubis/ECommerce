@@ -22,6 +22,7 @@ const createOrder = async () => {
       orderItems: Object.values(store.cart),
     }
     await RequestsService.Post('api/orders/create', newOrder)
+    store.clearCart()
     //showAlert(RequestsService.getDefaultSuccessConfig())
   } catch (err) {
     //showAlert(RequestsService.getDefaultErrorConfig(err))

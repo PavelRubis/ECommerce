@@ -36,8 +36,7 @@ export const useUserStore = defineStore('user', {
     setState(accountData) {
       this.username = accountData.username
       this.role = accountData.role
-      this.id = accountData.id,
-      this.customerId = accountData.customerId
+      ;(this.id = accountData.id), (this.customerId = accountData.customerId)
     },
     incrementItemQuantityInCart(item, itemId) {
       if (typeof itemId !== 'string' || itemId === null) {
@@ -88,6 +87,9 @@ export const useUserStore = defineStore('user', {
         return 0
       }
       return cartItem.itemsCount
+    },
+    clearCart: () => {
+      this.cart = {}
     },
   },
   persist: true,

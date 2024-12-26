@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="600px">
+  <v-dialog v-model="dialog" max-width="600px">
     <v-card>
       <v-card-title style="text-align: center">{{ props.title }}</v-card-title>
       <v-card-actions>
