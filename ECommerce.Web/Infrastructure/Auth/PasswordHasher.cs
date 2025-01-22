@@ -1,7 +1,7 @@
 ﻿using BCrypt.Net;
 using ECommerce.Application.Interfaces;
 
-namespace ECommerce.Web.Infrastructure
+namespace ECommerce.Web.Infrastructure.Auth
 {
     public class PasswordHasher : IPasswordHasher
     {

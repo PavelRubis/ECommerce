@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECommerce.Core.OtherInterfaces
+namespace ECommerce.Core.DTOsInterfaces
 {
     public interface IDTO<T>
     {

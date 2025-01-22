@@ -1,4 +1,4 @@
-﻿using ECommerce.DAL.DTOs;
+﻿using ECommerce.Application.DTOs;
 
 namespace ECommerce.Application.Interfaces
 {

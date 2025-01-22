@@ -1,6 +1,6 @@
 ﻿using ECommerce.Application.Interfaces;
-using ECommerce.DAL.DTOs;
-using ECommerce.DAL.Repositories;
+using ECommerce.Application.DTOs;
+using ECommerce.Application.RepositoryInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +11,10 @@ namespace ECommerce.Application.Services
 {
     public class AccountsService : IAccountsService
     {
-        private readonly AccountsRepository _accountsRepository;
+        private readonly IAccountsRepository _accountsRepository;
         private readonly IPasswordHasher _passwordHasher;
 
-        public AccountsService(AccountsRepository accountsRepository, IPasswordHasher passwordHasher)
+        public AccountsService(IAccountsRepository accountsRepository, IPasswordHasher passwordHasher)
         {
             _accountsRepository = accountsRepository;
             _passwordHasher = passwordHasher;

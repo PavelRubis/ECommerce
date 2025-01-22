@@ -1,18 +1,11 @@
-﻿using AutoMapper;
-using ECommerce.Application.Interfaces;
-using ECommerce.Core.Aggregates;
-using ECommerce.DAL.Repositories;
-using ECommerce.DAL.UnitOfWork;
+﻿using ECommerce.Application.Interfaces;
+using ECommerce.Application.RepositoryInterfaces;
 using ECommerce.Web.DTOs;
-using ECommerce.Web.Infrastructure;
+using ECommerce.Web.Infrastructure.Auth;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System.Data;
 using System.Security.Authentication;
-using Web;
 
 namespace ECommerce.Web.Controllers
 {
@@ -20,12 +13,12 @@ namespace ECommerce.Web.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        private readonly AccountsRepository _accountsRepository;
+        private readonly IAccountsRepository _accountsRepository;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtProvider _jwtProvider;
         private readonly JwtOptions _options;
 
-        public HomeController(AccountsRepository accountsRepository, IPasswordHasher passwordHasher, IJwtProvider jwtProvider, IOptions<JwtOptions> options)
+        public HomeController(IAccountsRepository accountsRepository, IPasswordHasher passwordHasher, IJwtProvider jwtProvider, IOptions<JwtOptions> options)
         {
             _accountsRepository = accountsRepository;
             _passwordHasher = passwordHasher;

@@ -1,5 +1,6 @@
 ﻿using ECommerce.Core.Aggregates;
 using ECommerce.Core.RepositoryInterfaces;
+using ECommerce.Application.RepositoryInterfaces;
 using ECommerce.DAL.Repositories;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace ECommerce.DAL.UnitOfWork
         IOrdersRepository OrdersRepository { get; }
         ICRUDRepository<Item> ItemsRepository { get; }
         ICustomerRepository CustomersRepository { get; }
-        AccountsRepository AccountsRepository { get; }
+        IAccountsRepository AccountsRepository { get; }
         void BeginTransaction();
         void CommitTransaction();
         void RollbackTransaction();

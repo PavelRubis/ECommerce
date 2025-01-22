@@ -1,16 +1,16 @@
+using ECommerce.Application.Interfaces;
+using ECommerce.Application.RepositoryInterfaces;
+using ECommerce.Application.Services;
 using ECommerce.Core.Aggregates;
 using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.Core.ServiceInterfaces;
 using ECommerce.DAL;
-using ECommerce.DAL.DTOs;
 using ECommerce.DAL.Repositories;
 using ECommerce.DAL.UnitOfWork;
-using Microsoft.EntityFrameworkCore;
-using ECommerce.Application.Services;
-using ECommerce.Application.Interfaces;
-using ECommerce.Web.Infrastructure;
-using Microsoft.AspNetCore.CookiePolicy;
 using ECommerce.Web.Extensions;
+using ECommerce.Web.Infrastructure.Auth;
+using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.EntityFrameworkCore;
 
 namespace Web
 {
@@ -18,6 +18,7 @@ namespace Web
     {
         public const string MANAGER_ROLE = "Manager";
         public const string CUSTOMER_ROLE = "Customer";
+        public const string AUTH_REQUIREMENT = "AUTH_REQUIREMENT";
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -45,7 +46,7 @@ namespace Web
             services.AddScoped<IOrdersService, OrdersService>();
             services.AddScoped<ICRUDRepository<Item>, ItemsRepository>();
             services.AddScoped<ICustomerRepository, CustomersRepository>();
-            services.AddScoped<AccountsRepository, AccountsRepository>();
+            services.AddScoped<IAccountsRepository, AccountsRepository>();
             services.AddScoped<IAccountsService, AccountsService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();

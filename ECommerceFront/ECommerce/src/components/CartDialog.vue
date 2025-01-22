@@ -85,6 +85,7 @@ const emit = defineEmits(['onSave'])
 const onOrderCreationSubmited = () => {
   dialog.value = false
   emit('onSave')
+  cartItemsTableArray = []
 }
 const onOrderCreationCanceled = () => {
   dialog.value = false

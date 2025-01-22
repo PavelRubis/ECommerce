@@ -1,15 +1,6 @@
-﻿using ECommerce.Core.Aggregates;
-using ECommerce.Core.RepositoryInterfaces;
+﻿using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.Core.ServiceInterfaces;
-using ECommerce.Core.OtherInterfaces;
 using ECommerce.Core.ValueObjects;
-using ECommerce.DAL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
 
 namespace ECommerce.Application.Services
 {
@@ -24,6 +15,7 @@ namespace ECommerce.Application.Services
 
         public async Task SubmitShippingAsync(Guid id, DateTime shipmentDate)
         {
+            // TODO: optimize
             var orderDto = await _repo.GetDtoByIdAsync(id);
             var order = orderDto.GetOriginalObject();
             var newStatus = new ShippingOrderStatus(shipmentDate);
@@ -33,6 +25,7 @@ namespace ECommerce.Application.Services
 
         public async Task CompleteAsync(Guid id)
         {
+            // TODO: optimize
             var orderDto = await _repo.GetDtoByIdAsync(id);
             var order = orderDto.GetOriginalObject();
             var newStatus = new ShippedOrderStatus();

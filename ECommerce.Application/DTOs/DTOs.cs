@@ -1,15 +1,14 @@
 ﻿using ECommerce.Core.Aggregates;
 using ECommerce.Core.Entities;
-using ECommerce.Core.OtherInterfaces;
+using ECommerce.Core.DTOsInterfaces;
 using ECommerce.Core.ValueObjects;
-using ECommerce.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECommerce.DAL.DTOs
+namespace ECommerce.Application.DTOs
 {
     public class CustomerOutWebDTO: IDTO<Customer>
     {

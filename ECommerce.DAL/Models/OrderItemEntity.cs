@@ -1,6 +1,6 @@
 ﻿using ECommerce.Core.Aggregates;
 using ECommerce.Core.Entities;
-using ECommerce.Core.OtherInterfaces;
+using ECommerce.Core.DTOsInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

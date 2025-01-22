@@ -1,8 +1,9 @@
-﻿using ECommerce.Web.Infrastructure;
+﻿using ECommerce.Web.Infrastructure.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 using Web;
 
@@ -27,29 +28,9 @@ namespace ECommerce.Web.Extensions
                         IssuerSigningKey = new SymmetricSecurityKey(
                             Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
                     };
-
-                    options.Events = new JwtBearerEvents()
-                    {
-                        OnMessageReceived = (context) =>
-                        {
-                            context.Token = context.Request.Cookies[jwtOptions.CookieName];
-
-                            return Task.CompletedTask;
-                        }
-                    };
+                    options.Events = new JwtAuthenticationEvents(jwtOptions);
                 });
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(Program.MANAGER_ROLE, policy =>
-                {
-                    policy.RequireClaim("Role", Program.MANAGER_ROLE);
-                });
-
-                options.AddPolicy(Program.CUSTOMER_ROLE, policy =>
-                {
-                    policy.RequireClaim("Role", Program.CUSTOMER_ROLE);
-                });
-            });
+            services.AddAuthorization();
         }
     }
 }

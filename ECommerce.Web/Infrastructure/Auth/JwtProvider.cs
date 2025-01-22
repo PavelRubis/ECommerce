@@ -1,4 +1,4 @@
-﻿using ECommerce.DAL.DTOs;
+﻿using ECommerce.Application.DTOs;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using ECommerce.Application.Interfaces;
 
-namespace ECommerce.Web.Infrastructure
+namespace ECommerce.Web.Infrastructure.Auth
 {
     public class JwtProvider : IJwtProvider
     {
@@ -20,8 +20,7 @@ namespace ECommerce.Web.Infrastructure
         {
             var claims = new List<Claim>()
             {
-                new("AccountId", account.Id.ToString()),
-                new("Role", account.Role)
+                new(_options.AccountIdClaimName, account.Id.ToString()),
             };
 
             var jwtCreds = new SigningCredentials(

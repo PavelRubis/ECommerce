@@ -4,7 +4,7 @@ using ECommerce.Core.Aggregates;
 using ECommerce.Core.Entities;
 using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.Core.ValueObjects;
-using ECommerce.DAL.DTOs;
+using ECommerce.Application.DTOs;
 using ECommerce.DAL.Models;
 using ECommerce.DAL.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ECommerce.Core.OtherInterfaces;
+using ECommerce.Core.DTOsInterfaces;
 using System.Linq.Expressions;
 
 namespace ECommerce.DAL.Repositories

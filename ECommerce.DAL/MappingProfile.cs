@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using ECommerce.Core.Aggregates;
-using ECommerce.Core.OtherInterfaces;
+using ECommerce.Application.DTOs;
 using ECommerce.DAL.Models;
 
-namespace ECommerce.DAL.DTOs
+namespace ECommerce.DAL
 {
     public class MappingProfile : Profile
     {

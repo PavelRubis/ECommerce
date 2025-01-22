@@ -2,10 +2,10 @@
 using ECommerce.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using ECommerce.Core.RepositoryInterfaces;
-using ECommerce.Core.OtherInterfaces;
+using ECommerce.Core.DTOsInterfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using ECommerce.DAL.DTOs;
+using ECommerce.Application.DTOs;
 
 namespace ECommerce.DAL.Repositories
 {

@@ -1,20 +1,13 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using ECommerce.Core.Aggregates;
-using ECommerce.Core.OtherInterfaces;
-using ECommerce.DAL.DTOs;
+using ECommerce.Application.DTOs;
+using ECommerce.Application.RepositoryInterfaces;
 using ECommerce.DAL.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.DAL.Repositories
 {
-    public class AccountsRepository
+    public class AccountsRepository : IAccountsRepository
     {
         private readonly ECommerceDbContext _dbContext;
         private readonly IMapper _mapper;
