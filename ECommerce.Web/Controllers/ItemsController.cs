@@ -10,13 +10,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Web;
+using ECommerce.Web.Infrastructure.Auth;
 
 namespace ECommerce.Web.Controllers
 {
 
     [Route("api/items")]
     [ApiController]
-    //[Authorize(Program.MANAGER_ROLE)]
     public class ItemsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -28,6 +28,7 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(AuthConstants.AnyRolePolicy)]
         public async Task<IActionResult> Get(Guid id)
         {
             var orderDTO = await _unitOfWork.ItemsRepository.GetDtoByIdAsync(id);
@@ -35,6 +36,7 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpGet("{page}/{pageSize}")]
+        [Authorize(AuthConstants.AnyRolePolicy)]
         public async Task<IActionResult> GetByPage(int page, int pageSize)
         {
             var dtos = await _unitOfWork.ItemsRepository.GetDtosByPageAsync(page, pageSize);
@@ -42,6 +44,7 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpGet("All")]
+        [Authorize(AuthConstants.AnyRolePolicy)]
         public async Task<IActionResult> GetAll()
         {
             var dtos = await _unitOfWork.ItemsRepository.GetAllDtosAsync();
@@ -49,6 +52,7 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpPost("Create")]
+        [Authorize(AuthConstants.ManagerRolePolicy)]
         public async Task<IActionResult> Create([FromBody] ItemWebDTO itemDto)
         {
             try
@@ -71,6 +75,7 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpPut("Edit")]
+        [Authorize(AuthConstants.ManagerRolePolicy)]
         public async Task<IActionResult> Edit([FromBody] ItemWebDTO itemDto)
         {
             try
@@ -93,6 +98,7 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
+        [Authorize(AuthConstants.ManagerRolePolicy)]
         public async Task<IActionResult> Delete(Guid id)
         {
             try

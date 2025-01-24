@@ -4,14 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECommerce.Application.Interfaces
+namespace ECommerce.Application.Enums
 {
-    public interface IAccountContext
-    {
-        public Guid AccountId { get; set; }
-        public AppRole Role { get; set; }
-    }
-
     public enum AppRole
     {
         Customer,

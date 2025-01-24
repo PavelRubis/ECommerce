@@ -14,6 +14,6 @@ namespace ECommerce.Core.ServiceInterfaces
     {
         Task SubmitShippingAsync(Guid id, DateTime shipmentDate);
         Task CompleteAsync(Guid id);
-        Task DeleteAsync(Guid id);
+        Task DeleteOwnAsync(Guid id);
     }
 }

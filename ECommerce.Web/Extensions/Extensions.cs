@@ -1,17 +1,14 @@
-﻿using ECommerce.Web.Infrastructure.Auth;
+﻿using ECommerce.Application.Enums;
+using ECommerce.Web.Infrastructure.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 using System.Text;
-using Web;
 
 namespace ECommerce.Web.Extensions
 {
     public static class Extensions
     {
-        public static void AddJwtAuthentication(
+        public static void AddJwtAuthenticationAndAuthorization(
             this IServiceCollection services,
             IConfiguration configuration)
         {
@@ -28,9 +25,33 @@ namespace ECommerce.Web.Extensions
                         IssuerSigningKey = new SymmetricSecurityKey(
                             Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
                     };
-                    options.Events = new JwtAuthenticationEvents(jwtOptions);
+                    options.Events = new JwtBearerEvents()
+                    {
+                        OnMessageReceived = (context) =>
+                        {
+                            context.Token = context.Request.Cookies[jwtOptions.CookieName];
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
-            services.AddAuthorization();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(AuthConstants.ManagerRolePolicy, policy =>
+                {
+                    policy.AddRequirements(new RoleRequirement(AppRole.Manager));
+                });
+
+                options.AddPolicy(AuthConstants.CustomerRolePolicy, policy =>
+                {
+                    policy.AddRequirements(new RoleRequirement(AppRole.Customer));
+                });
+
+                options.AddPolicy(AuthConstants.AnyRolePolicy, policy =>
+                {
+                    policy.AddRequirements(new RoleRequirement(AppRole.Customer, AppRole.Manager));
+                });
+            });
         }
     }
 }

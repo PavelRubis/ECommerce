@@ -9,16 +9,16 @@ using ECommerce.DAL.UnitOfWork;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ECommerce.Application.Services;
-using ECommerce.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Web;
+using ECommerce.Web.Infrastructure.Auth;
+using ECommerce.Application.ServiceInterfaces;
 
 namespace ECommerce.Web.Controllers
 {
-
     [Route("api/accounts")]
     [ApiController]
-    //[Authorize(Program.MANAGER_ROLE)]
+    [Authorize(AuthConstants.ManagerRolePolicy)]
     public class AccountsController : ControllerBase
     {
         private readonly IAccountsService _accountsService;

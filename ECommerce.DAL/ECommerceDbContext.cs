@@ -1,4 +1,5 @@
-﻿using ECommerce.Core.Aggregates;
+﻿using ECommerce.Application.Enums;
+using ECommerce.Core.Aggregates;
 using ECommerce.DAL.Configurations;
 using ECommerce.DAL.Models;
 using Microsoft.EntityFrameworkCore;
@@ -59,14 +60,14 @@ namespace ECommerce.DAL
             var adminAcc = new AccountEntity()
             {
                 Id = Guid.NewGuid(),
-                Role = "Manager",
+                Role = AppRole.Manager.ToString(),
                 Username = "admin",
                 Password = BCrypt.Net.BCrypt.EnhancedHashPassword("admin")
             };
             var userAcc = new AccountEntity()
             {
                 Id = Guid.NewGuid(),
-                Role = "Customer",
+                Role = AppRole.Customer.ToString(),
                 Username = "user",
                 Password = BCrypt.Net.BCrypt.EnhancedHashPassword("user")
             };

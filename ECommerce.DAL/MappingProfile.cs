@@ -7,6 +7,7 @@ using AutoMapper;
 using ECommerce.Core.Aggregates;
 using ECommerce.Application.DTOs;
 using ECommerce.DAL.Models;
+using ECommerce.Application.Enums;
 
 namespace ECommerce.DAL
 {
@@ -18,16 +19,16 @@ namespace ECommerce.DAL
             CreateMap<CustomerEntity, CustomerOutWebDTO>();
             CreateMap<Customer, CustomerOutWebDTO>();
             CreateMap<CustomerOutWebDTO, Customer>();
-            CreateMap<AccountEntity, AccountOutWebDTO>();
             CreateMap<AccountOutWebDTO, AccountEntity>();
+            CreateMap<AccountEntity, AccountOutWebDTO>().ForMember(m => m.Role, opt => opt.MapFrom(entity => Enum.Parse<AppRole>(entity.Role)));
 
             CreateMap<Customer, CustomerEntity>();
             CreateMap<CustomerInWebDTO, CustomerEntity>();
             CreateMap<CustomerEntity, CustomerInWebDTO>();
             CreateMap<Customer, CustomerInWebDTO>();
             CreateMap<CustomerInWebDTO, Customer>();
-            CreateMap<AccountEntity, AccountInWebDTO>();
             CreateMap<AccountInWebDTO, AccountEntity>();
+            CreateMap<AccountEntity, AccountInWebDTO>().ForMember(m => m.Role, opt => opt.MapFrom(entity => Enum.Parse<AppRole>(entity.Role)));
 
 
             CreateMap<Item, ItemEntity>();

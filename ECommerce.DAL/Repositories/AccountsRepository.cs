@@ -27,7 +27,7 @@ namespace ECommerce.DAL.Repositories
                 .FirstOrDefaultAsync(i => i.Username == username);
             if (entity == null)
             {
-                throw new NullReferenceException("Account not found");
+                return null;
             }
             return _mapper.Map<AccountInWebDTO>(entity);
         }
@@ -41,7 +41,7 @@ namespace ECommerce.DAL.Repositories
                 .FirstOrDefaultAsync(i => i.Id == id);
             if (entity == null)
             {
-                throw new NullReferenceException("Account not found");
+                return null;
             }
             return entity;
         }

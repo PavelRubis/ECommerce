@@ -27,10 +27,11 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpPost("Login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
         {
             var accDto = await _accountsRepository.GetByUsernameWithPassword(loginDTO.Username);
-            var result = _passwordHasher.Verify(loginDTO.Password, accDto.Password);
+            var result = _passwordHasher.Verify(loginDTO.Password, accDto?.Password ?? string.Empty);
 
             if (!result)
             {
@@ -42,8 +43,8 @@ namespace ECommerce.Web.Controllers
             return Ok(new { id = accDto.Id, customerId = accDto?.Customer?.Id, role = accDto.Role });
         }
 
-        [Authorize]
         [HttpPost("Logout")]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             HttpContext.Response.Cookies.Append(_options.CookieName, string.Empty);

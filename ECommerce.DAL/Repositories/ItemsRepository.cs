@@ -26,10 +26,6 @@ namespace ECommerce.DAL.Repositories
                 .AsNoTracking()
                 .ProjectTo<ItemWebDTO>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(i => i.Id == id);
-            if (entity == null)
-            {
-                throw new NullReferenceException("Item not found");
-            }
             return entity;
         }
 

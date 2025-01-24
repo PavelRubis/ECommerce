@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ECommerce.Application.Enums;
 
 namespace ECommerce.Application.DTOs
 {
@@ -22,7 +23,7 @@ namespace ECommerce.Application.DTOs
     public class AccountOutWebDTO
     {
         public Guid Id { get; set; }
-        public string Role { get; set; }
+        public AppRole Role { get; set; }
         public string Username { get; set; }
         public CustomerInWebDTO Customer { get; set; }
     }
@@ -30,7 +31,7 @@ namespace ECommerce.Application.DTOs
     public class AccountInWebDTO
     {
         public Guid Id { get; set; }
-        public string Role { get; set; }
+        public AppRole Role { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public CustomerInWebDTO Customer { get; set; }

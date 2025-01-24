@@ -1,5 +1,6 @@
 using ECommerce.Application.Interfaces;
 using ECommerce.Application.RepositoryInterfaces;
+using ECommerce.Application.ServiceInterfaces;
 using ECommerce.Application.Services;
 using ECommerce.Core.Aggregates;
 using ECommerce.Core.RepositoryInterfaces;
@@ -9,16 +10,15 @@ using ECommerce.DAL.Repositories;
 using ECommerce.DAL.UnitOfWork;
 using ECommerce.Web.Extensions;
 using ECommerce.Web.Infrastructure.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Converters;
 
 namespace Web
 {
     public class Program
     {
-        public const string MANAGER_ROLE = "Manager";
-        public const string CUSTOMER_ROLE = "Customer";
-        public const string AUTH_REQUIREMENT = "AUTH_REQUIREMENT";
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -26,11 +26,11 @@ namespace Web
             var config = builder.Configuration;
 
             services.Configure<JwtOptions>(config.GetSection(nameof(JwtOptions)));
-            services.AddJwtAuthentication(config);
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.Converters.Add(new StringEnumConverter()));
 
-            services
-                .AddControllers()
-                .AddNewtonsoftJson();
+            services.AddJwtAuthenticationAndAuthorization(config);
+            services.AddSingleton<IAuthorizationHandler, RoleRequirementHandler>();
 
             services.AddSwaggerGen();
             

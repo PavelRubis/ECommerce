@@ -33,7 +33,7 @@ namespace ECommerce.Application.Services
             await _repo.ChangeStatusAsync(order.Id, newStatus);
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteOwnAsync(Guid id)
         {
             var orderDto = await _repo.GetDtoByIdAsync(id);
             var order = orderDto.GetOriginalObject();

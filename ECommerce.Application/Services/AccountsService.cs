@@ -1,11 +1,7 @@
-﻿using ECommerce.Application.Interfaces;
-using ECommerce.Application.DTOs;
+﻿using ECommerce.Application.DTOs;
+using ECommerce.Application.Interfaces;
 using ECommerce.Application.RepositoryInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ECommerce.Application.ServiceInterfaces;
 
 namespace ECommerce.Application.Services
 {

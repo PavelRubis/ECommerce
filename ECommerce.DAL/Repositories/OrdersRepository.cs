@@ -40,10 +40,6 @@ namespace ECommerce.DAL.Repositories
             var orderDto = await orderQuery
                 .ProjectTo<OrderWebDTO>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(o => o.Id == id);
-            if (orderDto == null)
-            {
-                throw new NullReferenceException("Order not found");
-            }
             return orderDto;
         }
 

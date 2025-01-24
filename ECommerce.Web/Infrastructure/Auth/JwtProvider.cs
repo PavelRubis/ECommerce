@@ -20,7 +20,7 @@ namespace ECommerce.Web.Infrastructure.Auth
         {
             var claims = new List<Claim>()
             {
-                new(_options.AccountIdClaimName, account.Id.ToString()),
+                new(AuthConstants.AccountIdClaimType, account.Id.ToString()),
             };
 
             var jwtCreds = new SigningCredentials(
