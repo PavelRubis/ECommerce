@@ -4,6 +4,6 @@ namespace ECommerce.Application.Interfaces
 {
     public interface IJwtProvider
     {
-        string Generate(AccountInWebDTO account);
+        string Generate(string accId);
     }
 }

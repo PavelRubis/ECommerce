@@ -2,7 +2,7 @@
 using ECommerce.Core.Aggregates;
 using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.Core.ServiceInterfaces;
-using ECommerce.Core.DTOsInterfaces;
+using ECommerce.Core.Interfaces;
 using ECommerce.Application.DTOs;
 using ECommerce.DAL.Models;
 using ECommerce.DAL.UnitOfWork;
@@ -58,8 +58,7 @@ namespace ECommerce.Web.Controllers
             try
             {
                 _unitOfWork.BeginTransaction();
-                var item = _mapper.Map<Item>(itemDto);
-                var id = await _unitOfWork.ItemsRepository.CreateAsync(item);
+                var id = await _unitOfWork.ItemsRepository.CreateAsync(itemDto.GetOriginalObject(true));
                 _unitOfWork.CommitTransaction();
                 return Ok(id);
             }
@@ -81,8 +80,7 @@ namespace ECommerce.Web.Controllers
             try
             {
                 _unitOfWork.BeginTransaction();
-                var item = _mapper.Map<Item>(itemDto);
-                var id = await _unitOfWork.ItemsRepository.EditAsync(item);
+                var id = await _unitOfWork.ItemsRepository.EditAsync(itemDto.GetOriginalObject());
                 _unitOfWork.CommitTransaction();
                 return Ok(id);
             }

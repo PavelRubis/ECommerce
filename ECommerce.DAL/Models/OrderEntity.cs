@@ -1,6 +1,6 @@
 ﻿using ECommerce.Core.Aggregates;
 using ECommerce.Core.Entities;
-using ECommerce.Core.DTOsInterfaces;
+using ECommerce.Core.Interfaces;
 using ECommerce.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -20,6 +20,7 @@ namespace ECommerce.DAL.Models
         public long OrderNumber { get; set; }
         public string Status { get; set; }
         public List<OrderItemEntity> OrderItems { get; set; } = new List<OrderItemEntity>();
+        public bool IsDeleted { get; set; }
 
         public void SetStatusProps(OrderStatus orderStatus)
         {

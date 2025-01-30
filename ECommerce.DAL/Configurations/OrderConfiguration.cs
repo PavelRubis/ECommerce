@@ -17,9 +17,11 @@ namespace ECommerce.DAL.Configurations
             builder
                 .HasOne(x => x.Customer)
                 .WithMany(c => c.Orders)
-                .HasForeignKey(x => x.CustomerId);
+                .HasForeignKey(x => x.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
             builder.Property(x => x.OrderDate).IsRequired();
             builder.Property(x => x.Status).IsRequired();
+            builder.Property(x => x.IsDeleted).IsRequired();
         }
     }
 }

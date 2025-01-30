@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ECommerce.Core.DTOsInterfaces;
+using ECommerce.Core.Interfaces;
 using System.Linq.Expressions;
 
 namespace ECommerce.DAL.Repositories
@@ -29,7 +29,7 @@ namespace ECommerce.DAL.Repositories
             _mapper = mapper;
         }
 
-        public async Task<IOrderDTO> GetDtoByIdAsync(Guid id, bool withItems = false)
+        public async Task<IDTO<Order>> GetDtoByIdAsync(Guid id, bool withItems = false)
         {
             var orderQuery = _dbContext.Orders.AsNoTracking();
             if (withItems)
@@ -38,14 +38,14 @@ namespace ECommerce.DAL.Repositories
             }
 
             var orderDto = await orderQuery
+                .Where(o => o.Id == id && !o.IsDeleted)
                 .ProjectTo<OrderWebDTO>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(o => o.Id == id);
+                .FirstOrDefaultAsync();
             return orderDto;
         }
 
-        public async Task<List<IOrderDTO>> GetDtosAsync(bool withItems = false)
+        public async Task<List<IDTO<Order>>> GetDtosAsync(bool withItems = false)
         {
-
             var ordersQuery = _dbContext.Orders.AsNoTracking();
             if (withItems)
             {
@@ -53,13 +53,14 @@ namespace ECommerce.DAL.Repositories
             }
 
             var orderDtos = await ordersQuery
+                .Where(orderEntity => !orderEntity.IsDeleted)
                 .ProjectTo<OrderWebDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
-            return new List<IOrderDTO>(orderDtos);
+            return new List<IDTO<Order>>(orderDtos);
         }
 
-        public async Task<List<IOrderDTO>> GetDtosByStatusAsync(string starusStr, int page, int pageSize, bool withItems = false)
+        public async Task<List<IDTO<Order>>> GetDtosByStatusAsync(string starusStr, int page, int pageSize, bool withItems = false)
         {
             var ordersQuery = _dbContext.Orders.AsNoTracking();
             if (withItems)
@@ -68,13 +69,62 @@ namespace ECommerce.DAL.Repositories
             }
 
             var orderDtos = await ordersQuery
-                .Where(orderEntity => orderEntity.Status == starusStr)
+                .Where(orderEntity => orderEntity.Status == starusStr && !orderEntity.IsDeleted)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ProjectTo<OrderWebDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
-            return new List<IOrderDTO>(orderDtos);
+            return new List<IDTO<Order>>(orderDtos);
+        }
+
+        public async Task<IDTO<Order>> GetOwnDtoByIdAsync(Customer customer, Guid id, bool withItems = false)
+        {
+            var orderQuery = _dbContext.Orders.AsNoTracking();
+            if (withItems)
+            {
+                orderQuery = orderQuery.Include(o => o.OrderItems);
+            }
+
+            var orderDto = await orderQuery
+                .Where(o => o.Id == id && !o.IsDeleted && o.CustomerId == customer.Id)
+                .ProjectTo<OrderWebDTO>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
+            return orderDto;
+        }
+
+        public async Task<List<IDTO<Order>>> GetOwnDtosAsync(Customer customer, bool withItems = false)
+        {
+            var ordersQuery = _dbContext.Orders.AsNoTracking();
+            if (withItems)
+            {
+                ordersQuery = ordersQuery.Include(o => o.OrderItems);
+            }
+
+            var orderDtos = await ordersQuery
+                .Where(orderEntity => !orderEntity.IsDeleted && orderEntity.CustomerId == customer.Id)
+                .ProjectTo<OrderWebDTO>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return new List<IDTO<Order>>(orderDtos);
+        }
+
+        public async Task<List<IDTO<Order>>> GetOwnDtosByStatusAsync(Customer customer, string starusStr, int page, int pageSize, bool withItems = false)
+        {
+            var ordersQuery = _dbContext.Orders.AsNoTracking();
+            if (withItems)
+            {
+                ordersQuery = ordersQuery.Include(o => o.OrderItems);
+            }
+
+            var orderDtos = await ordersQuery
+                .Where(orderEntity => orderEntity.Status == starusStr && !orderEntity.IsDeleted && orderEntity.CustomerId == customer.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ProjectTo<OrderWebDTO>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return new List<IDTO<Order>>(orderDtos);
         }
 
         public async Task<Guid> CreateAsync(Order order)
@@ -108,7 +158,7 @@ namespace ECommerce.DAL.Repositories
             {
                 throw new NullReferenceException("Order not found");
             }
-            _dbContext.Orders.Remove(orderEntity);
+            orderEntity.IsDeleted = true;
         }
 
         private async Task<long> GetNewOrderNumberAsync()

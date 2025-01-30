@@ -35,8 +35,9 @@ export const useUserStore = defineStore('user', {
   actions: {
     setState(accountData) {
       this.username = accountData.username
-      this.role = accountData.role
-      ;(this.id = accountData.id), (this.customerId = accountData.customerId)
+      this.role = accountData.role,
+      this.id = accountData.id,
+      this.customerId = accountData.customerId
     },
     incrementItemQuantityInCart(item, itemId) {
       if (typeof itemId !== 'string' || itemId === null) {

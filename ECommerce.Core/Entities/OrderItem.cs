@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ECommerce.Core.Aggregates;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
@@ -27,6 +28,10 @@ namespace ECommerce.Core.Entities
         public static OrderItem CreateOrFail(Guid orderId, Guid itemId, int itemsCount, decimal itemsPrice, Guid id = default)
         {
             var errors = new List<Exception>(3);
+            if (orderId == default)
+            {
+                errors.Add(new ArgumentException("Order item can not exist without order."));
+            }
             if (itemsCount < 1)
             {
                 errors.Add(new ArgumentException("Quantity can not be less than 1."));

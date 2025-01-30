@@ -1,5 +1,5 @@
 ﻿using ECommerce.Core.Aggregates;
-using ECommerce.Core.DTOsInterfaces;
+using ECommerce.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +16,6 @@ namespace ECommerce.DAL.Models
         public decimal Price { get; set; }
         public string Category { get; set; }
         public List<OrderItemEntity> OrderItems { get; set; } = new List<OrderItemEntity>();
+        public bool IsDeleted { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 using ECommerce.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using ECommerce.Core.RepositoryInterfaces;
-using ECommerce.Core.DTOsInterfaces;
+using ECommerce.Core.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ECommerce.Application.DTOs;
@@ -24,6 +24,7 @@ namespace ECommerce.DAL.Repositories
         {
             var entity = await _dbContext.Items
                 .AsNoTracking()
+                .Where(i => i.Id == id && !i.IsDeleted)
                 .ProjectTo<ItemWebDTO>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(i => i.Id == id);
             return entity;
@@ -33,6 +34,7 @@ namespace ECommerce.DAL.Repositories
         {
             var items = await _dbContext.Items
                 .AsNoTracking()
+                .Where(i => !i.IsDeleted)
                 .ProjectTo<ItemWebDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
             return new List<IDTO<Item>>(items);
@@ -42,6 +44,7 @@ namespace ECommerce.DAL.Repositories
         {
             var items = await _dbContext.Items
                 .AsNoTracking()
+                .Where(i => !i.IsDeleted)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ProjectTo<ItemWebDTO>(_mapper.ConfigurationProvider)
@@ -73,7 +76,7 @@ namespace ECommerce.DAL.Repositories
             {
                 throw new NullReferenceException("Item not found");
             }
-            _dbContext.Items.Remove(entity);
+            entity.IsDeleted = true;
         }
     }
 }

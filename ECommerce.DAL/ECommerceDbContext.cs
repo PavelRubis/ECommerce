@@ -1,13 +1,7 @@
-﻿using ECommerce.Application.Enums;
-using ECommerce.Core.Aggregates;
+﻿using ECommerce.Core.Aggregates;
 using ECommerce.DAL.Configurations;
 using ECommerce.DAL.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.DAL
 {
@@ -23,6 +17,7 @@ namespace ECommerce.DAL
             : base(options)
         {
         }
+
         public void BeginTransaction()
         {
             Database.BeginTransaction();
@@ -36,6 +31,12 @@ namespace ECommerce.DAL
         public void RollbackTransaction()
         {
             Database.RollbackTransaction();
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging(true);
+            base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -60,14 +61,14 @@ namespace ECommerce.DAL
             var adminAcc = new AccountEntity()
             {
                 Id = Guid.NewGuid(),
-                Role = AppRole.Manager.ToString(),
+                Role = AccountRole.Manager.ToString(),
                 Username = "admin",
                 Password = BCrypt.Net.BCrypt.EnhancedHashPassword("admin")
             };
             var userAcc = new AccountEntity()
             {
                 Id = Guid.NewGuid(),
-                Role = AppRole.Customer.ToString(),
+                Role = AccountRole.Customer.ToString(),
                 Username = "user",
                 Password = BCrypt.Net.BCrypt.EnhancedHashPassword("user")
             };

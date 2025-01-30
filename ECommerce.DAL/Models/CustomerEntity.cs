@@ -1,5 +1,5 @@
 ﻿using ECommerce.Core.Aggregates;
-using ECommerce.Core.DTOsInterfaces;
+using ECommerce.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +17,7 @@ namespace ECommerce.DAL.Models
         public decimal? Discount { get; set; } = decimal.Zero;
         public List<OrderEntity> Orders { get; set; } = new List<OrderEntity>();
         public Guid AccountId { get; set; }
-        public AccountEntity? Account { get; set; }
+        public AccountEntity Account { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

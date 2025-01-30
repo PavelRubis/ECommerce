@@ -5,14 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECommerce.Core.DTOsInterfaces
+namespace ECommerce.Core.Interfaces
 {
     public interface IDTO<T>
     {
-    }
-
-    public interface IOrderDTO : IDTO<Order>
-    {
-        public Order GetOriginalObject();
+        public T GetOriginalObject(bool asNew = false);
     }
 }
+   

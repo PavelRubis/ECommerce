@@ -14,9 +14,10 @@ namespace ECommerce.DAL.Configurations
         public void Configure(EntityTypeBuilder<AccountEntity> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Role).IsRequired();
+            builder.Property(x => x.Role).IsRequired().HasMaxLength(100);
             builder.Property(x => x.Username).IsRequired();
             builder.Property(x => x.Password).IsRequired();
+            builder.Property(x => x.IsDeleted).IsRequired();
         }
     }
 }

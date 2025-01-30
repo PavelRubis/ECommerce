@@ -1,6 +1,5 @@
+using ECommerce.Application.InfrastructureInterfaces;
 using ECommerce.Application.Interfaces;
-using ECommerce.Application.RepositoryInterfaces;
-using ECommerce.Application.ServiceInterfaces;
 using ECommerce.Application.Services;
 using ECommerce.Core.Aggregates;
 using ECommerce.Core.RepositoryInterfaces;
@@ -26,14 +25,17 @@ namespace Web
             var config = builder.Configuration;
 
             services.Configure<JwtOptions>(config.GetSection(nameof(JwtOptions)));
-            services.AddControllers().AddNewtonsoftJson(options =>
-                options.SerializerSettings.Converters.Add(new StringEnumConverter()));
+            services.AddControllers().AddNewtonsoftJson(options => 
+            {
+                options.SerializerSettings.Converters.Add(new StringEnumConverter());
+            });
 
             services.AddJwtAuthenticationAndAuthorization(config);
             services.AddSingleton<IAuthorizationHandler, RoleRequirementHandler>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentAccountContext, CurrentAccountContext>();
 
-            services.AddSwaggerGen();
-            
+
             services.AddDbContext<ECommerceDbContext>
             (
                 options =>
@@ -51,9 +53,9 @@ namespace Web
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IJwtProvider, JwtProvider>();
-
             services.AddAutoMapper(typeof(MappingProfile));
 
+            services.AddSwaggerGen();
             var app = builder.Build();
             if (app.Environment.IsDevelopment())
             {

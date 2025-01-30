@@ -1,6 +1,6 @@
 ﻿using ECommerce.Core.Aggregates;
 using ECommerce.Core.Entities;
-using ECommerce.Core.DTOsInterfaces;
+using ECommerce.Core.Interfaces;
 using ECommerce.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -13,9 +13,12 @@ namespace ECommerce.Core.RepositoryInterfaces
 {
     public interface IOrdersRepository
     {
-        Task<IOrderDTO> GetDtoByIdAsync(Guid id, bool withItems = false);
-        Task<List<IOrderDTO>> GetDtosAsync(bool withItems = false);
-        Task<List<IOrderDTO>> GetDtosByStatusAsync(string starusStr, int page, int pageSize, bool withItems = false);
+        Task<IDTO<Order>> GetOwnDtoByIdAsync(Customer customer, Guid id, bool withItems = false);
+        Task<List<IDTO<Order>>> GetOwnDtosAsync(Customer customer, bool withItems = false);
+        Task<List<IDTO<Order>>> GetOwnDtosByStatusAsync(Customer customer, string starusStr, int page, int pageSize, bool withItems = false);
+        Task<IDTO<Order>> GetDtoByIdAsync(Guid id, bool withItems = false);
+        Task<List<IDTO<Order>>> GetDtosAsync(bool withItems = false);
+        Task<List<IDTO<Order>>> GetDtosByStatusAsync(string starusStr, int page, int pageSize, bool withItems = false);
         Task<Guid> CreateAsync(Order order);
         Task<Guid> ChangeStatusAsync(Guid id, OrderStatus orderStatus);
         Task DeleteAsync(Guid id);

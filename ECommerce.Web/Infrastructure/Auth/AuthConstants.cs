@@ -2,7 +2,8 @@
 {
     internal static class AuthConstants
     {
-        internal const string AccountIdClaimType = "AccountId";
+        internal const string AccountIdContextKey = "AccountId";
+        internal const string AccountContextKey = "Account";
 
         internal const string ManagerRolePolicy = "Manager";
         internal const string CustomerRolePolicy = "Customer";

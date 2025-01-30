@@ -1,7 +1,7 @@
 ﻿using ECommerce.Core.Aggregates;
 using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.Core.ServiceInterfaces;
-using ECommerce.Core.DTOsInterfaces;
+using ECommerce.Core.Interfaces;
 using ECommerce.Application.DTOs;
 using ECommerce.DAL.Models;
 using ECommerce.DAL.UnitOfWork;
@@ -30,7 +30,7 @@ namespace ECommerce.Web.Controllers
         [Authorize(AuthConstants.AnyRolePolicy)]
         public async Task<IActionResult> Get(Guid id)
         {
-            var orderDTO = await _unitOfWork.OrdersRepository.GetDtoByIdAsync(id);
+            var orderDTO = await _ordersService.Get(id);
             return Ok(orderDTO);
         }
 
@@ -38,7 +38,7 @@ namespace ECommerce.Web.Controllers
         [Authorize(AuthConstants.AnyRolePolicy)]
         public async Task<IActionResult> GetDtosAsync(bool withItems = false)
         {
-            var dtos = await _unitOfWork.OrdersRepository.GetDtosAsync(withItems);
+            var dtos = await _ordersService.GetDtosAsync(withItems);
             return Ok(dtos);
         }
 
@@ -46,7 +46,7 @@ namespace ECommerce.Web.Controllers
         [Authorize(AuthConstants.AnyRolePolicy)]
         public async Task<IActionResult> GetDtosByStatusAsync(string statusStr, int page, int pageSize, bool withItems = false)
         {
-            var dtos = await _unitOfWork.OrdersRepository.GetDtosByStatusAsync(statusStr, page, pageSize, withItems);
+            var dtos = await _ordersService.GetDtosByStatusAsync(statusStr, page, pageSize, withItems);
             return Ok(dtos);
         }
 
@@ -57,7 +57,7 @@ namespace ECommerce.Web.Controllers
             try
             {
                 _unitOfWork.BeginTransaction();
-                var id = await _unitOfWork.OrdersRepository.CreateAsync(orderDto.GetOriginalObject());
+                var id = await _unitOfWork.OrdersRepository.CreateAsync(orderDto.GetOriginalObject(true));
                 _unitOfWork.CommitTransaction();
                 return Ok(id);
             }

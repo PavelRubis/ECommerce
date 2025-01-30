@@ -1,14 +1,13 @@
-﻿using ECommerce.Application.Interfaces;
+﻿using ECommerce.Core.Aggregates;
 using Microsoft.AspNetCore.Authorization;
-using ECommerce.Application.Enums;
 
 namespace ECommerce.Web.Infrastructure.Auth
 {
     public class RoleRequirement : IAuthorizationRequirement
     {
-        public IEnumerable<AppRole> PermitedRole { get; }
+        public IEnumerable<AccountRole> PermitedRole { get; }
 
-        public RoleRequirement(params AppRole[] requiredRole)
+        public RoleRequirement(params AccountRole[] requiredRole)
         {
             PermitedRole = requiredRole;
         }

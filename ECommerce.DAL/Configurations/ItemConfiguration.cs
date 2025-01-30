@@ -16,6 +16,7 @@ namespace ECommerce.DAL.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Code).IsRequired();
             builder.Property(x => x.Category).IsRequired().HasMaxLength(30);
+            builder.Property(x => x.IsDeleted).IsRequired();
         }
     }
 }

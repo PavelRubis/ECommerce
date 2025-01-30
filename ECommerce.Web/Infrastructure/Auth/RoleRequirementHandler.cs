@@ -1,7 +1,5 @@
-﻿using ECommerce.Application.Interfaces;
-using ECommerce.Application.RepositoryInterfaces;
+﻿using ECommerce.Core.RepositoryInterfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ECommerce.Web.Infrastructure.Auth
 {
@@ -16,7 +14,7 @@ namespace ECommerce.Web.Infrastructure.Auth
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, RoleRequirement requirement)
         {
-            var accIdClaim = context.User?.FindFirst(AuthConstants.AccountIdClaimType);
+            var accIdClaim = context.User?.FindFirst(AuthConstants.AccountIdContextKey);
             if (accIdClaim == null || !Guid.TryParse(accIdClaim.Value, out var accId))
             {
                 context.Fail();
@@ -24,22 +22,28 @@ namespace ECommerce.Web.Infrastructure.Auth
             }
 
             using var scope = _scopeFactory.CreateScope();
+            var contextAccessor = scope.ServiceProvider.GetRequiredService<IHttpContextAccessor>();
+            if (contextAccessor?.HttpContext == null)
+            {
+                context.Fail();
+            }
             var accountsRepo = scope.ServiceProvider.GetRequiredService<IAccountsRepository>();
             try
             {
-                var acc = await accountsRepo.GetByIdAsync(accId);
+                var acc = await accountsRepo.GetByIdAsDtoAsync(accId);
                 if (acc == null || !requirement.PermitedRole.Contains(acc.Role))
                 {
                     context.Fail();
                     return;
                 }
+                contextAccessor.HttpContext.Items.Add(AuthConstants.AccountContextKey, acc);
+                context.Succeed(requirement);
             }
             catch (NullReferenceException ex)
             {
                 context.Fail();
                 return;
             }
-            context.Succeed(requirement);
         }
     }
 

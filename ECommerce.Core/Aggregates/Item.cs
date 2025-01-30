@@ -27,7 +27,7 @@ namespace ECommerce.Core.Aggregates
 
         public static Item CreateOrFail(string code, string name, decimal price, ItemCategory category, Guid id = default)
         {
-            if (!Item.IsInputValid(code, name, price, out var errors))
+            if (!Item.IsInputValid(code, name, price, category, out var errors))
             {
                 throw new AggregateException(errors);
             }
@@ -35,7 +35,7 @@ namespace ECommerce.Core.Aggregates
         }
 
         private static Regex CodeRegex = new Regex(@"^\d{2}-\d{4}-YY\d{2}$", RegexOptions.Compiled);
-        private static bool IsInputValid(string code, string name, decimal price, out List<Exception> errors)
+        private static bool IsInputValid(string code, string name, decimal price, ItemCategory category, out List<Exception> errors)
         {
             errors = new List<Exception>(3);
             if (!CodeRegex.IsMatch(code))
@@ -50,6 +50,10 @@ namespace ECommerce.Core.Aggregates
             {
                 errors.Add(new ArgumentException("Price can not be less than 0."));
             }
+            if (category == ItemCategory.Undefined)
+            {
+                errors.Add(new ArgumentException("Item category can not be empty."));
+            }
             if (errors.Count > 0)
             {
                 return false;
@@ -60,6 +64,7 @@ namespace ECommerce.Core.Aggregates
 
     public enum ItemCategory
     {
+        Undefined,
         Other,
         Shirt,
         TShirt,

@@ -1,11 +1,8 @@
-﻿using ECommerce.Core.Aggregates;
+﻿using AutoMapper;
+using ECommerce.Core.Entities;
+using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.DAL.Models;
 using Microsoft.EntityFrameworkCore;
-using ECommerce.Core.RepositoryInterfaces;
-using ECommerce.Core.DTOsInterfaces;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using ECommerce.Application.DTOs;
 
 namespace ECommerce.DAL.Repositories
 {
@@ -23,6 +20,15 @@ namespace ECommerce.DAL.Repositories
         public async Task<Guid> CreateAsync(Customer customer)
         {
             var entry = await _dbContext.Customers.AddAsync(_mapper.Map<CustomerEntity>(customer));
+            return entry.Entity.Id;
+        }
+
+        public async Task<Guid> CreateAsync(Customer customer, AccountEntity accountEntity)
+        {
+            var entity = _mapper.Map<CustomerEntity>(customer);
+            entity.AccountId = accountEntity.Id;
+            entity.Account = accountEntity;
+            var entry = await _dbContext.Customers.AddAsync(entity);
             return entry.Entity.Id;
         }
 

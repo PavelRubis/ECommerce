@@ -20,12 +20,14 @@ namespace ECommerce.DAL.Configurations
             builder
                 .HasOne(x => x.Order)
                 .WithMany(o => o.OrderItems)
-                .HasForeignKey(o => o.OrderId);
+                .HasForeignKey(o => o.OrderId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .HasOne(x => x.Item)
                 .WithMany(i => i.OrderItems)
-                .HasForeignKey(o => o.ItemId);
+                .HasForeignKey(o => o.ItemId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace ECommerce.Core.Aggregates
+namespace ECommerce.Core.Entities
 {
     public class Customer
     {
@@ -28,7 +28,7 @@ namespace ECommerce.Core.Aggregates
 
         public static Customer CreateOrFail(string name, string code, string address, decimal discount, Guid accountId, Guid id = default)
         {
-            if (!Customer.IsInputValid(accountId, name, code, discount, out var errors))
+            if (!IsInputValid(accountId, name, code, discount, out var errors))
             {
                 throw new AggregateException(errors);
             }

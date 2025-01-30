@@ -1,43 +1,32 @@
 ﻿using ECommerce.Core.Aggregates;
+using ECommerce.Core.Interfaces;
 using ECommerce.Core.Entities;
-using ECommerce.Core.DTOsInterfaces;
 using ECommerce.Core.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ECommerce.Application.Enums;
 
 namespace ECommerce.Application.DTOs
 {
-    public class CustomerOutWebDTO: IDTO<Customer>
+    public class AccountWebDTO : IDTO<Account>
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Code { get; set; }
-        public string Address { get; set; } = string.Empty;
-        public decimal Discount { get; set; } = decimal.Zero;
-    }
-
-    public class AccountOutWebDTO
-    {
-        public Guid Id { get; set; }
-        public AppRole Role { get; set; }
-        public string Username { get; set; }
-        public CustomerInWebDTO Customer { get; set; }
-    }
-
-    public class AccountInWebDTO
-    {
-        public Guid Id { get; set; }
-        public AppRole Role { get; set; }
+        public AccountRole Role { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public CustomerInWebDTO Customer { get; set; }
+        public CustomerWebDTO Customer { get; set; }
+
+        public Account GetOriginalObject(bool asNew = false)
+        {
+            var accId = asNew ? Guid.NewGuid() : this.Id;
+            var customer = default(Customer);
+            if (this.Customer != default)
+            {
+                this.Customer.AccountId = accId;
+                customer = this.Customer.GetOriginalObject();
+            }
+            return Account.CreateOrFail(this.Username, this.Password, this.Role, customer, accId);
+        }
     }
 
-    public class CustomerInWebDTO
+    public class CustomerWebDTO : IDTO<Customer>
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -45,6 +34,26 @@ namespace ECommerce.Application.DTOs
         public string Address { get; set; } = string.Empty;
         public decimal Discount { get; set; } = decimal.Zero;
         public Guid AccountId { get; set; }
+
+        public Customer GetOriginalObject(bool asNew = false)
+        {
+            return Customer.CreateOrFail(this.Name, this.Code, this.Address, this.Discount, this.AccountId, asNew ? Guid.NewGuid() : this.Id);
+        }
+    }
+
+    public class AccountSafeProjection : IAccountProjection
+    {
+        public Guid Id { get; set; }
+        public AccountRole Role { get; set; }
+        public string Username { get; set; }
+        public CustomerWebDTO Customer { get; set; }
+
+        public void SetDataFromOriginalObject(Account account)
+        {
+            this.Id = account.Id;
+            this.Role = account.Role;
+            this.Username = account.Username;
+        }
     }
 
     public class ItemWebDTO : IDTO<Item>
@@ -53,10 +62,15 @@ namespace ECommerce.Application.DTOs
         public string Code { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
-        public string Category { get; set; }
+        public ItemCategory Category { get; set; }
+
+        public Item GetOriginalObject(bool asNew = false)
+        {
+            return Item.CreateOrFail(this.Code, this.Name, this.Price, this.Category, asNew ? Guid.NewGuid() : this.Id);
+        }
     }
 
-    public class OrderWebDTO : IOrderDTO
+    public class OrderWebDTO : IDTO<Order>
     {
         public Guid Id { get; set; }
         public Guid CustomerId { get; set; }
@@ -99,7 +113,7 @@ namespace ECommerce.Application.DTOs
             }));
         }
 
-        public Order GetOriginalObject()
+        public Order GetOriginalObject(bool asNew = false)
         {
             var status = default(OrderStatus);
             switch (Enum.Parse<OrderStatusEnum>(this.Status))
@@ -114,9 +128,13 @@ namespace ECommerce.Application.DTOs
                     status = new ShippedOrderStatus();
                     break;
             }
-            var items = this.OrderItems.Select(item => item.GetOriginalObject()).ToList();
-            var result = new Order(this.CustomerId, status, items, this.Id);
-            result.Items.ForEach(item => item.OrderId = result.Id);
+            var orderId = asNew ? Guid.NewGuid() : this.Id;
+            var items = this.OrderItems.Select(itemDto =>
+            {
+                itemDto.OrderId = orderId;
+                return itemDto.GetOriginalObject();
+            }).ToList();
+            var result = new Order(this.CustomerId, status, items, orderId);
             return result;
         }
     }
@@ -129,9 +147,9 @@ namespace ECommerce.Application.DTOs
         public int ItemsCount { get; set; }
         public decimal ItemPrice { get; set; }
 
-        public OrderItem GetOriginalObject()
+        public OrderItem GetOriginalObject(bool asNew = false)
         {
-            return OrderItem.CreateOrFail(this.OrderId, this.ItemId, this.ItemsCount, this.ItemPrice);
+            return OrderItem.CreateOrFail(this.OrderId, this.ItemId, this.ItemsCount, this.ItemPrice, asNew ? Guid.NewGuid() : this.Id);
         }
 
         public void SetDataFromObject(OrderItem obj)

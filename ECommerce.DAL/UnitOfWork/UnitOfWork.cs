@@ -1,13 +1,7 @@
 ﻿using AutoMapper;
 using ECommerce.Core.Aggregates;
 using ECommerce.Core.RepositoryInterfaces;
-using ECommerce.Application.RepositoryInterfaces;
 using ECommerce.DAL.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.DAL.UnitOfWork
 {

@@ -1,7 +1,7 @@
-﻿using ECommerce.Application.DTOs;
-using ECommerce.Application.Interfaces;
-using ECommerce.Application.RepositoryInterfaces;
-using ECommerce.Application.ServiceInterfaces;
+﻿using ECommerce.Application.Interfaces;
+using ECommerce.Core.Aggregates;
+using ECommerce.Core.RepositoryInterfaces;
+using ECommerce.Core.ServiceInterfaces;
 
 namespace ECommerce.Application.Services
 {
@@ -16,16 +16,16 @@ namespace ECommerce.Application.Services
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<Guid> CreateAsync(AccountInWebDTO account)
+        public async Task<Guid> CreateAsync(Account account)
         {
-            account.Password = _passwordHasher.Hash(account.Password); ;
+            account.Password = _passwordHasher.Hash(account.Password);
             var accId = await _accountsRepository.CreateAsync(account);
             return accId;
         }
 
-        public async Task<Guid> EditAsync(AccountInWebDTO account)
+        public async Task<Guid> EditAsync(Account account)
         {
-            account.Password = _passwordHasher.Hash(account.Password); ;
+            account.Password = _passwordHasher.Hash(account.Password);
             var accId = await _accountsRepository.EditAsync(account);
             return accId;
         }

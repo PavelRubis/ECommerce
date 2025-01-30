@@ -1,5 +1,5 @@
 ﻿using ECommerce.Application.Interfaces;
-using ECommerce.Application.RepositoryInterfaces;
+using ECommerce.Core.RepositoryInterfaces;
 using ECommerce.Web.DTOs;
 using ECommerce.Web.Infrastructure.Auth;
 using Microsoft.AspNetCore.Authorization;
@@ -30,17 +30,17 @@ namespace ECommerce.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
         {
-            var accDto = await _accountsRepository.GetByUsernameWithPassword(loginDTO.Username);
-            var result = _passwordHasher.Verify(loginDTO.Password, accDto?.Password ?? string.Empty);
+            var account = await _accountsRepository.GetByUsername(loginDTO.Username);
+            var result = _passwordHasher.Verify(loginDTO.Password, account?.Password ?? string.Empty);
 
             if (!result)
             {
                 throw new AuthenticationException("Invalid credentials");
             }
 
-            var token = _jwtProvider.Generate(accDto);
+            var token = _jwtProvider.Generate(account.Id.ToString());
             HttpContext.Response.Cookies.Append(_options.CookieName, token);
-            return Ok(new { id = accDto.Id, customerId = accDto?.Customer?.Id, role = accDto.Role });
+            return Ok(new { id = account.Id, customerId = account?.Customer?.Id, role = account.Role });
         }
 
         [HttpPost("Logout")]

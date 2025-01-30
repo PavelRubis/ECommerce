@@ -1,4 +1,5 @@
-﻿using ECommerce.Application.Enums;
+﻿using ECommerce.Core.Aggregates;
+using ECommerce.Core.Entities;
 
 namespace ECommerce.DAL.Models
 {
@@ -9,5 +10,6 @@ namespace ECommerce.DAL.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public CustomerEntity? Customer { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

@@ -16,11 +16,11 @@ namespace ECommerce.Web.Infrastructure.Auth
             _options = options.Value;
         }
 
-        public string Generate(AccountInWebDTO account)
+        public string Generate(string accId)
         {
             var claims = new List<Claim>()
             {
-                new(AuthConstants.AccountIdClaimType, account.Id.ToString()),
+                new(AuthConstants.AccountIdContextKey, accId),
             };
 
             var jwtCreds = new SigningCredentials(
