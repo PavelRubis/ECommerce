@@ -31,10 +31,16 @@
         </div>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon class="action-icon" @click="openEditionDialog(item)">
+        <v-icon
+          v-if="hasPermission('ITEMS', 'DELETE')"
+          class="action-icon"
+          @click="openEditionDialog(item)"
+        >
           fa-regular fa-pen-to-square
         </v-icon>
-        <v-icon @click="openDeletionDialog(item)"> fa-regular fa-trash-can </v-icon>
+        <v-icon v-if="hasPermission('ITEMS', 'DELETE')" @click="openDeletionDialog(item)">
+          fa-regular fa-trash-can
+        </v-icon>
       </template>
     </v-data-table>
   </div>
@@ -46,6 +52,7 @@ import RequestsService from '@/services/RequestsService'
 import ItemEditionDialog from '@/components/ItemEditionDialog.vue'
 import CommandDialog from '@/components/shared/CommandDialog.vue'
 import { useUserStore } from '@/stores/UserStore'
+import { hasPermission } from '../utils/hasPermission'
 const showAlert = inject('showAlert')
 const showLoader = inject('showLoader')
 const editDialog = ref(null)
@@ -146,9 +153,14 @@ const headers = [
     sortable: false,
     key: 'code',
   },
-  { title: 'Add to cart', key: 'cart', sortable: false },
-  { title: 'Edit or delete', key: 'actions', sortable: false },
 ]
+
+if (store.role === 'Customer') {
+  headers.push({ title: 'Add to cart', key: 'cart', sortable: false })
+}
+if (hasPermission('ITEMS', 'DELETE') && hasPermission('ITEMS', 'EDIT')) {
+  headers.push({ title: 'Edit or delete', key: 'actions', sortable: false })
+}
 
 const items = reactive({})
 

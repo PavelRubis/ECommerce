@@ -2,6 +2,7 @@
   <v-dialog v-model="dialog" max-width="500px">
     <template v-slot:activator="{ props }">
       <v-btn
+      v-if="hasPermission('ITEMS', 'CREATE')"
         @click="emit('onCreationRequested')"
         v-bind="props"
         :variant="VuetifyDefaults.UI_VARIANT"
@@ -61,6 +62,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { ItemsDefaults, VuetifyDefaults } from '@/meta'
+import { hasPermission } from '../utils/hasPermission'
 
 const dialog = ref(false)
 const title = ref('New Item')

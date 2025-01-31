@@ -33,7 +33,7 @@ const createOrder = async () => {
 </script>
 
 <template>
-  <v-btn class="btn" variant="outlined" icon="fa-solid fa-cart-arrow-down" @click="onCartBtnClick">
+  <v-btn v-if="store.role === 'Customer'" class="btn" variant="outlined" icon="fa-solid fa-cart-arrow-down" @click="onCartBtnClick">
   </v-btn>
   <CartDialog ref="cartDialog" @on-save="createOrder"></CartDialog>
 </template>

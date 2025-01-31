@@ -9,17 +9,16 @@
             @onCreationRequested="openCreationDialog"
             ref="editDialog"
           ></AccountEditionDialog>
-          <CommandDialog
-            @onOperationSubmited="deleteAccount"
-            ref="deleteDialog"
-          ></CommandDialog>
+          <CommandDialog @onOperationSubmited="deleteAccount" ref="deleteDialog"></CommandDialog>
         </v-toolbar>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon class="edit-icon" @click="openEditionDialog(item)">
           fa-regular fa-pen-to-square
         </v-icon>
-        <v-icon @click="openDeletionDialog(item)"> fa-regular fa-trash-can </v-icon>
+        <v-icon v-if="hasPermission_('CUSTOMERS', 'DELETE')" @click="openDeletionDialog(item)">
+          fa-regular fa-trash-can
+        </v-icon>
       </template>
     </v-data-table>
   </div>
@@ -27,6 +26,7 @@
 
 <script setup>
 import { reactive, ref, inject, onMounted } from 'vue'
+import { hasPermission } from '../utils/hasPermission'
 const showAlert = inject('showAlert')
 const showLoader = inject('showLoader')
 import RequestsService from '@/services/RequestsService'
@@ -80,6 +80,8 @@ const deleteAccount = async (account) => {
     showLoader(false)
   }
 }
+
+const hasPermission_ = hasPermission
 
 const headers = [
   {

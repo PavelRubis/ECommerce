@@ -9,37 +9,37 @@ export const Actions = {
 }
 
 export const Permissions = {
-  ORDERS: {
-    [Roles.MANAGER_ROLE]: {
+  [Roles.MANAGER_ROLE]: {
+    ORDERS: {
       READ: Actions.ANY,
       EDIT: Actions.ANY,
     },
-    [Roles.CUSTOMER_ROLE]: {
-      CREATE: Actions.SELF,
+    ITEMS: {
+      READ: Actions.ANY,
+      CREATE: Actions.ANY,
+      EDIT: Actions.ANY,
+      DELETE: Actions.ANY,
+    },
+    CUSTOMERS: {
+      READ: Actions.ANY,
+      CREATE: Actions.ANY,
+      EDIT: Actions.ANY,
+      DELETE: Actions.ANY,
+    },
+  },
+  [Roles.CUSTOMER_ROLE]: {
+    ORDERS: {
       READ: Actions.SELF,
+      CREATE: Actions.SELF,
       DELETE: Actions.SELF,
     },
-  },
-  ITEMS: {
-    [Roles.MANAGER_ROLE]: {
-      READ: Actions.ANY,
-      CREATE: Actions.ANY,
-      EDIT: Actions.ANY,
-      DELETE: Actions.ANY,
-    },
-    [Roles.CUSTOMER_ROLE]: {
+    ITEMS: {
       READ: Actions.ANY,
     },
-  },
-  CUSTOMERS: {
-    [Roles.MANAGER_ROLE]: {
-      READ: Actions.ANY,
-      CREATE: Actions.ANY,
-      EDIT: Actions.ANY,
-      DELETE: Actions.ANY,
-    },
+    CUSTOMERS: {},
   },
 }
+
 
 export const ContentSections = {
   ITEMS: 'items',

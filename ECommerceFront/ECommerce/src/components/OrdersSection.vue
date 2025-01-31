@@ -27,25 +27,27 @@
         <v-icon class="action-icon" @click="openDeletionDialog(item)"> fa-solid fa-list </v-icon>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon class="action-icon" @click="openSubmitionDialog(item)">
+        <v-icon
+          v-if="hasPermission('ORDERS', 'EDIT')"
+          class="action-icon"
+          @click="openSubmitionDialog(item)"
+        >
           fa-regular fa-thumbs-up
         </v-icon>
-        <v-icon class="action-icon" @click="openCompletionDialog(item)">
+        <v-icon
+          v-if="hasPermission('ORDERS', 'EDIT')"
+          class="action-icon"
+          @click="openCompletionDialog(item)"
+        >
           fa-solid fa-circle-check
         </v-icon>
-        <v-icon class="action-icon" @click="openDeletionDialog(item)">
+        <v-icon
+          v-if="hasPermission('ORDERS', 'DELETE', true) && item.status === 'New'"
+          class="action-icon"
+          @click="openDeletionDialog(item)"
+        >
           fa-regular fa-trash-can
         </v-icon>
-
-        <!-- <v-icon v-if="store.role === Roles.MANAGER_ROLE" @click="openSubmitionDialog(item)">
-          fa-regular fa-thumbs-up
-        </v-icon>
-        <v-icon v-if="store.role === Roles.MANAGER_ROLE" @click="openCompletionDialog(item)">
-          fa-solid fa-circle-check
-        </v-icon>
-        <v-icon v-if="store.role === Roles.CUSTOMER_ROLE" @click="openDeletionDialog(item)">
-          fa-regular fa-trash-can
-        </v-icon> -->
       </template>
     </v-data-table>
   </div>
@@ -53,6 +55,7 @@
 
 <script setup>
 import { Roles, VuetifyDefaults } from '@/meta'
+import { hasPermission } from '../utils/hasPermission'
 import { reactive, ref, inject, onMounted } from 'vue'
 import { useUserStore } from '@/stores/UserStore'
 const showAlert = inject('showAlert')
@@ -134,8 +137,10 @@ const headers = [
     sortable: true,
     key: 'shipmentDate',
   },
-  { title: 'Actions', key: 'actions', sortable: false },
 ]
+if (hasPermission('ORDERS', 'DELETE', true) || hasPermission('ORDERS', 'EDIT')) {
+  headers.push({ title: 'Actions', key: 'actions', sortable: false })
+}
 
 const orders = reactive({})
 
